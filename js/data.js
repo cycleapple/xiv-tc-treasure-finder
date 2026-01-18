@@ -1,19 +1,20 @@
 // 藏寶圖等級數據 (由高到低排序)
+// 注意：繁中版目前只到 7.0，7.0 以後的內容暫時隱藏
 const GRADE_DATA = [
-    { grade: "G18", itemId: 46185, name: "陳舊的奧卡大蜥蜴革地圖", partySize: 8, expansion: "黃金時代" },
-    { grade: "G17", itemId: 43557, name: "陳舊的獰豹革地圖", partySize: 8, expansion: "黃金時代" },
-    { grade: "G16", itemId: 43556, name: "陳舊的銀狼革地圖", partySize: 1, expansion: "黃金時代" },
-    { grade: "G15", itemId: 39591, name: "陳舊的蛇牛革地圖", partySize: 8, expansion: "曉月之終" },
-    { grade: "G14", itemId: 36612, name: "陳舊的金毗羅鱷革地圖", partySize: 8, expansion: "曉月之終" },
-    { grade: "G13", itemId: 36611, name: "陳舊的賽加羚羊革地圖", partySize: 1, expansion: "曉月之終" },
-    { grade: "G12", itemId: 26745, name: "陳舊的纏尾蛟革地圖", partySize: 8, expansion: "闇影之逆" },
-    { grade: "G11", itemId: 26744, name: "陳舊的綠飄龍革地圖", partySize: 1, expansion: "闇影之逆" },
-    { grade: "綠圖", itemId: 19770, name: "深層傳送魔紋的地圖", partySize: 8, expansion: "紅蓮之狂潮", special: true },
-    { grade: "G10", itemId: 17836, name: "陳舊的瞪羚革地圖", partySize: 8, expansion: "紅蓮之狂潮" },
-    { grade: "G9", itemId: 17835, name: "陳舊的迦迦納怪鳥革地圖", partySize: 1, expansion: "紅蓮之狂潮" },
-    { grade: "G8", itemId: 12243, name: "陳舊的巨龍革地圖", partySize: 8, expansion: "蒼穹之禁城" },
-    { grade: "G7", itemId: 12242, name: "陳舊的飛龍革地圖", partySize: 1, expansion: "蒼穹之禁城" },
-    { grade: "G6", itemId: 12241, name: "陳舊的古鳥革地圖", partySize: 1, expansion: "蒼穹之禁城" }
+    // { grade: "G18", itemId: 46185, name: "陳舊的卡岡圖亞革地圖", partySize: 8, expansion: "7.3" }, // 7.3 尚未有繁中翻譯
+    { grade: "G17", itemId: 43557, name: "陳舊的獰豹革地圖", partySize: 8, expansion: "7.0" },
+    { grade: "G16", itemId: 43556, name: "陳舊的銀狼革地圖", partySize: 1, expansion: "7.0" },
+    { grade: "G15", itemId: 39591, name: "陳舊的蛇牛革地圖", partySize: 8, expansion: "6.3" },
+    { grade: "G14", itemId: 36612, name: "陳舊的金毗羅鱷革地圖", partySize: 8, expansion: "6.0" },
+    { grade: "G13", itemId: 36611, name: "陳舊的賽加羚羊革地圖", partySize: 1, expansion: "6.0" },
+    { grade: "G12", itemId: 26745, name: "陳舊的纏尾蛟革地圖", partySize: 8, expansion: "5.0" },
+    { grade: "G11", itemId: 26744, name: "陳舊的綠飄龍革地圖", partySize: 1, expansion: "5.0" },
+    { grade: "綠圖", itemId: 19770, name: "深層傳送魔紋的地圖", partySize: 8, expansion: "4.05", special: true },
+    { grade: "G10", itemId: 17836, name: "陳舊的瞪羚革地圖", partySize: 8, expansion: "4.0" },
+    { grade: "G9", itemId: 17835, name: "陳舊的迦迦納怪鳥革地圖", partySize: 1, expansion: "4.0" },
+    { grade: "G8", itemId: 12243, name: "陳舊的巨龍革地圖", partySize: 8, expansion: "3.0" },
+    { grade: "G7", itemId: 12242, name: "陳舊的飛龍革地圖", partySize: 1, expansion: "3.0" },
+    { grade: "G6", itemId: 12241, name: "陳舊的古鳥革地圖", partySize: 1, expansion: "3.0" }
 ];
 
 // 藏寶圖物品名稱 (繁中)
@@ -43,7 +44,7 @@ const ITEM_NAMES = {
     39918: "陳舊的特殊地圖4",
     43556: "陳舊的銀狼革地圖",
     43557: "陳舊的獰豹革地圖",
-    46185: "陳舊的奧卡大蜥蜴革地圖"
+    46185: "陳舊的卡岡圖亞革地圖"
 };
 
 // 地點名稱 (繁中)
@@ -68,7 +69,7 @@ const PLACE_NAMES = {
     2000: "德拉瓦尼亞山麓地",
     2001: "德拉瓦尼亞河谷地",
     2002: "德拉瓦尼亞雲海",
-    2100: "阿巴拉提亞雲海",
+    2100: "魔大陸阿濟茲拉",
     2200: "庫爾札斯西部高地",
     2406: "基拉巴尼亞邊區",
     2407: "基拉巴尼亞山區",

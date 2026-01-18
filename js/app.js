@@ -18,7 +18,6 @@ const mapMarkers = document.getElementById('map-markers');
 const selectedMarker = document.getElementById('selected-marker');
 const puzzleGrid = document.getElementById('puzzle-grid');
 const treasureCount = document.getElementById('treasure-count');
-const detailPanel = document.getElementById('detail-panel');
 
 // 初始化
 function init() {
@@ -98,7 +97,7 @@ function selectMap(mapId) {
     showStep('treasure');
 }
 
-// 渲染藏寶點
+// 渲染藏寶點 (Teamcraft 風格)
 function renderTreasures() {
     const treasures = getTreasuresForGradeAndMap(selectedGrade, selectedMapId);
     treasureCount.textContent = treasures.length;
@@ -107,40 +106,53 @@ function renderTreasures() {
     mapMarkers.innerHTML = '';
     puzzleGrid.innerHTML = '';
     selectedMarker.classList.add('hidden');
-    detailPanel.classList.add('hidden');
+
+    // 隱藏側邊資訊
+    const sideMapInfo = document.getElementById('side-map-info');
+    if (sideMapInfo) sideMapInfo.classList.add('hidden');
 
     treasures.forEach((treasure, index) => {
-        // 添加地圖標記
+        // 添加側邊地圖標記
         const pos = coordsToPercent(treasure.coords, treasure.map);
         const marker = document.createElement('div');
-        marker.className = 'treasure-marker';
+        marker.className = 'map-marker';
         marker.style.left = `${pos.x}%`;
         marker.style.top = `${pos.y}%`;
         marker.dataset.treasureId = treasure.id;
-        marker.dataset.index = index + 1;
-        marker.innerHTML = `<span class="marker-number">${index + 1}</span>`;
+        marker.textContent = index + 1;
         marker.addEventListener('click', () => selectTreasure(treasure, index));
         mapMarkers.appendChild(marker);
 
-        // 計算謎題圖片偏移 (模擬 Teamcraft 的裁切效果)
-        const puzzleOffset = calcPuzzleOffset(treasure.coords, treasure.map);
+        // 計算 Teamcraft 風格的地圖偏移 (基於 2048px 地圖)
+        const displayOffset = calcTeamcraftOffset(treasure.coords, treasure.map);
 
-        // 添加謎題卡片
+        // 創建 Teamcraft 風格的藏寶圖卡片
         const card = document.createElement('div');
-        card.className = 'puzzle-card';
+        card.className = 'treasure-map';
         card.dataset.treasureId = treasure.id;
 
+        const partySize = treasure.partySize || selectedGrade.partySize;
+
         card.innerHTML = `
-            <div class="puzzle-number">${index + 1}</div>
-            <div class="puzzle-preview">
-                <div class="puzzle-map-container">
-                    <img class="puzzle-map-image" src="${MAP_DATA[treasure.map]?.image}" alt="預覽"
-                         style="left: ${puzzleOffset.x}%; top: ${puzzleOffset.y}%;">
-                </div>
-                <div class="puzzle-frame"></div>
-                <div class="puzzle-marker"></div>
+            <div class="map-background-container">
+                <img class="map-background"
+                     src="${MAP_DATA[treasure.map]?.image}"
+                     alt="地圖"
+                     style="left: ${displayOffset.x}px; top: ${displayOffset.y}px;">
             </div>
-            <div class="puzzle-coords">X: ${treasure.coords.x.toFixed(1)}, Y: ${treasure.coords.y.toFixed(1)}</div>
+            <div class="map-foreground"></div>
+            <div class="treasure-marker-icon">
+                <img src="assets/icons/treasure_marker.png" alt="標記">
+            </div>
+            <div class="position shadow-text">
+                X: ${treasure.coords.x.toFixed(1)} Y: ${treasure.coords.y.toFixed(1)}
+            </div>
+            <div class="player-count">
+                <div class="player-icon">
+                    <img src="assets/icons/treasuremap_player.png" alt="玩家">
+                </div>
+                <span class="party-size shadow-text">${partySize}</span>
+            </div>
         `;
 
         card.addEventListener('click', () => selectTreasure(treasure, index));
@@ -148,24 +160,31 @@ function renderTreasures() {
     });
 }
 
-// 計算謎題圖片偏移量 (讓藏寶點位於中央，使用百分比)
-function calcPuzzleOffset(coords, mapId) {
+// 計算 Teamcraft 風格的地圖偏移量 (像素)
+// 讓目標藏寶點位於卡片中央
+function calcTeamcraftOffset(coords, mapId) {
     const map = MAP_DATA[mapId];
     const sizeFactor = map?.size_factor || 100;
     const scale = sizeFactor / 100;
 
-    // 遊戲座標轉換為百分比位置 (0-100)
-    const posX = ((coords.x - 1) / (41 * scale)) * 100;
-    const posY = ((coords.y - 1) / (41 * scale)) * 100;
+    // 遊戲座標轉換為百分比位置 (0-1)
+    // FFXIV 地圖座標範圍是 1 到 (41*scale + 1)
+    const posX = (coords.x - 1) / (41 * scale);
+    const posY = (coords.y - 1) / (41 * scale);
 
-    // 圖片是容器的 15 倍 (1500%)
-    // 要讓 posX% 的點位於容器中央 (50%)
-    // 偏移公式: -(posX * 15) + 50
-    const imageScale = 15;
-    const offsetX = -(posX * imageScale) + 50;
-    const offsetY = -(posY * imageScale) + 50;
+    // 轉換為 2048x2048 地圖上的像素位置
+    const pixelX = posX * 2048;
+    const pixelY = posY * 2048;
 
-    return { x: offsetX, y: offsetY };
+    // 容器中央位置 (218*0.9/2 和 189*0.9/2)
+    const centerX = 218 * 0.9 / 2;  // 98.1
+    const centerY = 189 * 0.9 / 2;  // 85.05
+
+    // 計算偏移：讓 pixelX 位置出現在容器中央
+    const displayX = centerX - pixelX;
+    const displayY = centerY - pixelY;
+
+    return { x: displayX, y: displayY };
 }
 
 // 遊戲座標轉換為地圖百分比位置
@@ -182,13 +201,13 @@ function coordsToPercent(coords, mapId) {
 function selectTreasure(treasure, index) {
     selectedTreasure = treasure;
 
-    // 更新標記高亮
-    document.querySelectorAll('.treasure-marker').forEach(m => {
+    // 更新側邊地圖標記高亮
+    document.querySelectorAll('.map-marker').forEach(m => {
         m.classList.toggle('active', m.dataset.treasureId === treasure.id);
     });
 
-    // 更新卡片高亮
-    document.querySelectorAll('.puzzle-card').forEach(c => {
+    // 更新藏寶圖卡片高亮
+    document.querySelectorAll('.treasure-map').forEach(c => {
         c.classList.toggle('active', c.dataset.treasureId === treasure.id);
     });
 
@@ -198,32 +217,26 @@ function selectTreasure(treasure, index) {
     selectedMarker.style.top = `${pos.y}%`;
     selectedMarker.classList.remove('hidden');
 
-    // 顯示詳情面板
-    showDetailPanel(treasure);
+    // 顯示側邊資訊
+    showSideInfo(treasure);
 
     // 滾動到選中的卡片
-    const activeCard = document.querySelector(`.puzzle-card[data-treasure-id="${treasure.id}"]`);
+    const activeCard = document.querySelector(`.treasure-map[data-treasure-id="${treasure.id}"]`);
     if (activeCard) {
         activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 }
 
-// 顯示詳情面板
-function showDetailPanel(treasure) {
-    const map = MAP_DATA[treasure.map];
-    const pos = coordsToPercent(treasure.coords, treasure.map);
+// 顯示側邊資訊
+function showSideInfo(treasure) {
+    const sideMapInfo = document.getElementById('side-map-info');
+    if (!sideMapInfo) return;
 
-    document.getElementById('detail-map-image').src = map.image;
-    document.getElementById('detail-coords').textContent = `X: ${treasure.coords.x.toFixed(1)}, Y: ${treasure.coords.y.toFixed(1)}`;
-    document.getElementById('detail-map-name').textContent = getMapName(treasure.map);
+    document.getElementById('detail-coords').textContent =
+        `X: ${treasure.coords.x.toFixed(1)}, Y: ${treasure.coords.y.toFixed(1)}`;
     document.getElementById('detail-item').textContent = getItemName(treasure.item);
-    document.getElementById('detail-party').textContent = treasure.partySize === 8 ? '8人組隊' : '單人';
 
-    const detailMarker = document.getElementById('detail-marker');
-    detailMarker.style.left = `${pos.x}%`;
-    detailMarker.style.top = `${pos.y}%`;
-
-    detailPanel.classList.remove('hidden');
+    sideMapInfo.classList.remove('hidden');
 }
 
 // 顯示步驟
