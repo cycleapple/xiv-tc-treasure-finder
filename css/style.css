@@ -244,6 +244,25 @@ header h1 {
     color: var(--party-1);
 }
 
+/* 採集地點資訊 */
+.gathering-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.gathering-level {
+    color: var(--accent-gold);
+    font-weight: 500;
+}
+
+.gathering-zones {
+    opacity: 0.85;
+}
+
 /* Map Grid */
 .map-grid {
     display: grid;
@@ -1752,5 +1771,124 @@ footer a:hover {
     }
     to {
         transform: rotate(360deg);
+    }
+}
+
+/* ============================================
+   採集點功能樣式
+   ============================================ */
+
+/* 採集點按鈕 */
+.btn-gathering-nodes {
+    margin-top: 8px;
+    padding: 4px 12px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-gathering-nodes:hover {
+    background: var(--accent-hover);
+    transform: scale(1.05);
+}
+
+/* Modal - 大尺寸 */
+.modal-lg {
+    max-width: 600px;
+}
+
+/* 職業區塊 */
+.gathering-job-section {
+    margin-bottom: 20px;
+}
+
+.gathering-job-section:last-child {
+    margin-bottom: 0;
+}
+
+.gathering-job-title {
+    font-size: 1rem;
+    color: var(--accent-gold);
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+}
+
+/* 節點卡片 */
+.gathering-node-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--bg-tertiary);
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.gathering-node-card:last-child {
+    margin-bottom: 0;
+}
+
+.node-type {
+    min-width: 50px;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.node-zone {
+    flex: 1;
+    min-width: 100px;
+    color: var(--text-primary);
+}
+
+.node-coords {
+    font-family: 'Consolas', 'Monaco', monospace;
+    color: var(--accent-gold);
+    font-size: 0.9rem;
+}
+
+.node-level {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.btn-copy-coords {
+    padding: 4px 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.btn-copy-coords:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.btn-copy-coords.copied {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+}
+
+/* 響應式 - 採集點 */
+@media (max-width: 500px) {
+    .gathering-node-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .btn-copy-coords {
+        width: 100%;
     }
 }

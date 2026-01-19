@@ -2,19 +2,19 @@
 // 注意：繁中版目前只到 7.0，7.0 以後的內容暫時隱藏
 const GRADE_DATA = [
     // { grade: "G18", itemId: 46185, name: "陳舊的卡岡圖亞革地圖", partySize: 8, expansion: "7.3" }, // 7.3 尚未有繁中翻譯
-    { grade: "G17", itemId: 43557, name: "陳舊的獰豹革地圖", partySize: 8, expansion: "7.0" },
-    { grade: "G16", itemId: 43556, name: "陳舊的銀狼革地圖", partySize: 1, expansion: "7.0" },
-    { grade: "G15", itemId: 39591, name: "陳舊的蛇牛革地圖", partySize: 8, expansion: "6.3" },
-    { grade: "G14", itemId: 36612, name: "陳舊的金毗羅鱷革地圖", partySize: 8, expansion: "6.0" },
-    { grade: "G13", itemId: 36611, name: "陳舊的賽加羚羊革地圖", partySize: 1, expansion: "6.0" },
-    { grade: "G12", itemId: 26745, name: "陳舊的纏尾蛟革地圖", partySize: 8, expansion: "5.0" },
-    { grade: "G11", itemId: 26744, name: "陳舊的綠飄龍革地圖", partySize: 1, expansion: "5.0" },
-    { grade: "綠圖", itemId: 19770, name: "深層傳送魔紋的地圖", partySize: 8, expansion: "4.05", special: true },
-    { grade: "G10", itemId: 17836, name: "陳舊的瞪羚革地圖", partySize: 8, expansion: "4.0" },
-    { grade: "G9", itemId: 17835, name: "陳舊的迦迦納怪鳥革地圖", partySize: 1, expansion: "4.0" },
-    { grade: "G8", itemId: 12243, name: "陳舊的巨龍革地圖", partySize: 8, expansion: "3.0" },
-    { grade: "G7", itemId: 12242, name: "陳舊的飛龍革地圖", partySize: 1, expansion: "3.0" },
-    { grade: "G6", itemId: 12241, name: "陳舊的古鳥革地圖", partySize: 1, expansion: "3.0" }
+    { grade: "G17", itemId: 43557, name: "陳舊的獰豹革地圖", partySize: 8, expansion: "7.0", gatheringLevel: 100, gatheringZoneIds: [4508, 4509, 4507] },
+    { grade: "G16", itemId: 43556, name: "陳舊的銀狼革地圖", partySize: 1, expansion: "7.0", gatheringLevel: 100, gatheringZoneIds: [4508, 4509, 4507] },
+    { grade: "G15", itemId: 39591, name: "陳舊的蛇牛革地圖", partySize: 8, expansion: "6.3", gatheringLevel: 90, gatheringZoneIds: [3713] },
+    { grade: "G14", itemId: 36612, name: "陳舊的金毗羅鱷革地圖", partySize: 8, expansion: "6.0", gatheringLevel: 90, gatheringZoneIds: [3708, 3709, 3711, 3712] },
+    { grade: "G13", itemId: 36611, name: "陳舊的賽加羚羊革地圖", partySize: 1, expansion: "6.0", gatheringLevel: 90, gatheringZoneIds: [3708, 3709, 3711, 3712] },
+    { grade: "G12", itemId: 26745, name: "陳舊的纏尾蛟革地圖", partySize: 8, expansion: "5.0", gatheringLevel: 80, gatheringZoneIds: [2953, 2954, 2955, 2956, 2957, 2958] },
+    { grade: "G11", itemId: 26744, name: "陳舊的綠飄龍革地圖", partySize: 1, expansion: "5.0", gatheringLevel: 80, gatheringZoneIds: [2953, 2954, 2955, 2956, 2957, 2958] },
+    { grade: "綠圖", itemId: 19770, name: "深層傳送魔紋的地圖", partySize: 8, expansion: "4.05", special: true, gatheringLevel: 70, gatheringZoneIds: [2406, 2407, 2408, 2409, 2410, 2411] },
+    { grade: "G10", itemId: 17836, name: "陳舊的瞪羚革地圖", partySize: 8, expansion: "4.0", gatheringLevel: 70, gatheringZoneIds: [2406, 2407, 2408, 2409, 2410, 2411] },
+    { grade: "G9", itemId: 17835, name: "陳舊的迦迦納怪鳥革地圖", partySize: 1, expansion: "4.0", gatheringLevel: 70, gatheringZoneIds: [2406, 2407, 2408, 2409, 2410, 2411] },
+    { grade: "G8", itemId: 12243, name: "陳舊的巨龍革地圖", partySize: 8, expansion: "3.0", gatheringLevel: 60, gatheringZoneIds: [2200, 2000, 2001, 2002, 2100] },
+    { grade: "G7", itemId: 12242, name: "陳舊的飛龍革地圖", partySize: 1, expansion: "3.0", gatheringLevel: 60, gatheringZoneIds: [2200, 2000, 2001, 2002, 2100] },
+    { grade: "G6", itemId: 12241, name: "陳舊的古鳥革地圖", partySize: 1, expansion: "3.0", gatheringLevel: 60, gatheringZoneIds: [2200, 2000, 2001, 2002, 2100] }
 ];
 
 // 藏寶圖物品名稱 (繁中)
@@ -162,6 +162,179 @@ const TREASURES = TREASURES_RAW.split("|").map(row => {
     };
 });
 
+// 職業名稱對照
+const JOB_NAMES = {
+    miner: "採掘師",
+    botanist: "園藝師"
+};
+
+// 節點類型對照
+const NODE_TYPE_NAMES = {
+    "礦脈": "礦脈",       // Mineral Deposit (Mining)
+    "石場": "石場",       // Rocky Outcrop (Quarrying)
+    "草叢": "草叢",       // Lush Vegetation (Harvesting)
+    "良材": "良材"        // Mature Tree (Logging)
+};
+
+// 採集點資料 (Key = itemId，對應 GRADE_DATA 中的 itemId)
+const GATHERING_NODES = {
+    // G17 - 陳舊的獰豹革地圖 (Lv.100)
+    43557: [
+        { job: "miner", nodeType: "礦脈", zoneId: 4508, coords: { x: 13, y: 9 }, level: 100 },
+        { job: "miner", nodeType: "礦脈", zoneId: 4509, coords: { x: 29, y: 22 }, level: 100 },
+        { job: "miner", nodeType: "石場", zoneId: 4508, coords: { x: 17, y: 32 }, level: 100 },
+        { job: "miner", nodeType: "石場", zoneId: 4507, coords: { x: 22, y: 15 }, level: 100 },
+        { job: "botanist", nodeType: "良材", zoneId: 4508, coords: { x: 12, y: 22 }, level: 100 },
+        { job: "botanist", nodeType: "良材", zoneId: 4509, coords: { x: 32, y: 28 }, level: 100 },
+        { job: "botanist", nodeType: "草叢", zoneId: 4508, coords: { x: 25.3, y: 34 }, level: 100 },
+        { job: "botanist", nodeType: "草叢", zoneId: 4507, coords: { x: 18, y: 27 }, level: 100 }
+    ],
+
+    // G16 - 陳舊的銀狼革地圖 (Lv.100)
+    43556: [
+        { job: "miner", nodeType: "礦脈", zoneId: 4508, coords: { x: 13, y: 9 }, level: 100 },
+        { job: "miner", nodeType: "礦脈", zoneId: 4509, coords: { x: 29, y: 22 }, level: 100 },
+        { job: "miner", nodeType: "石場", zoneId: 4508, coords: { x: 17, y: 32 }, level: 100 },
+        { job: "miner", nodeType: "石場", zoneId: 4507, coords: { x: 22, y: 15 }, level: 100 },
+        { job: "botanist", nodeType: "良材", zoneId: 4508, coords: { x: 12, y: 22 }, level: 100 },
+        { job: "botanist", nodeType: "良材", zoneId: 4509, coords: { x: 32, y: 28 }, level: 100 },
+        { job: "botanist", nodeType: "草叢", zoneId: 4508, coords: { x: 25.3, y: 34 }, level: 100 },
+        { job: "botanist", nodeType: "草叢", zoneId: 4507, coords: { x: 18, y: 27 }, level: 100 }
+    ],
+
+    // G15 - 陳舊的蛇牛革地圖 (Lv.90)
+    39591: [
+        { job: "miner", nodeType: "礦脈", zoneId: 3713, coords: { x: 24, y: 27 }, level: 90 },
+        { job: "miner", nodeType: "礦脈", zoneId: 3713, coords: { x: 31, y: 19 }, level: 90 },
+        { job: "miner", nodeType: "石場", zoneId: 3713, coords: { x: 18, y: 12 }, level: 90 },
+        { job: "miner", nodeType: "石場", zoneId: 3713, coords: { x: 26, y: 8 }, level: 90 },
+        { job: "botanist", nodeType: "良材", zoneId: 3713, coords: { x: 22, y: 31 }, level: 90 },
+        { job: "botanist", nodeType: "良材", zoneId: 3713, coords: { x: 12, y: 21 }, level: 90 },
+        { job: "botanist", nodeType: "草叢", zoneId: 3713, coords: { x: 28, y: 15 }, level: 90 },
+        { job: "botanist", nodeType: "草叢", zoneId: 3713, coords: { x: 15, y: 28 }, level: 90 }
+    ],
+
+    // G14 - 陳舊的金毗羅鱷革地圖 (Lv.90)
+    36612: [
+        { job: "miner", nodeType: "礦脈", zoneId: 3708, coords: { x: 19, y: 22 }, level: 90 },
+        { job: "miner", nodeType: "礦脈", zoneId: 3709, coords: { x: 23, y: 17 }, level: 90 },
+        { job: "miner", nodeType: "石場", zoneId: 3711, coords: { x: 26, y: 28 }, level: 90 },
+        { job: "miner", nodeType: "石場", zoneId: 3712, coords: { x: 15, y: 31 }, level: 90 },
+        { job: "botanist", nodeType: "良材", zoneId: 3708, coords: { x: 28, y: 35 }, level: 90 },
+        { job: "botanist", nodeType: "良材", zoneId: 3709, coords: { x: 17, y: 25 }, level: 90 },
+        { job: "botanist", nodeType: "草叢", zoneId: 3711, coords: { x: 21, y: 19 }, level: 90 },
+        { job: "botanist", nodeType: "草叢", zoneId: 3712, coords: { x: 24, y: 14 }, level: 90 }
+    ],
+
+    // G13 - 陳舊的賽加羚羊革地圖 (Lv.90)
+    36611: [
+        { job: "miner", nodeType: "礦脈", zoneId: 3708, coords: { x: 19, y: 22 }, level: 90 },
+        { job: "miner", nodeType: "礦脈", zoneId: 3709, coords: { x: 23, y: 17 }, level: 90 },
+        { job: "miner", nodeType: "石場", zoneId: 3711, coords: { x: 26, y: 28 }, level: 90 },
+        { job: "miner", nodeType: "石場", zoneId: 3712, coords: { x: 15, y: 31 }, level: 90 },
+        { job: "botanist", nodeType: "良材", zoneId: 3708, coords: { x: 28, y: 35 }, level: 90 },
+        { job: "botanist", nodeType: "良材", zoneId: 3709, coords: { x: 17, y: 25 }, level: 90 },
+        { job: "botanist", nodeType: "草叢", zoneId: 3711, coords: { x: 21, y: 19 }, level: 90 },
+        { job: "botanist", nodeType: "草叢", zoneId: 3712, coords: { x: 24, y: 14 }, level: 90 }
+    ],
+
+    // G12 - 陳舊的纏尾蛟革地圖 (Lv.80)
+    26745: [
+        { job: "miner", nodeType: "礦脈", zoneId: 2953, coords: { x: 27, y: 19 }, level: 80 },
+        { job: "miner", nodeType: "礦脈", zoneId: 2954, coords: { x: 22, y: 25 }, level: 80 },
+        { job: "miner", nodeType: "石場", zoneId: 2955, coords: { x: 17, y: 13 }, level: 80 },
+        { job: "miner", nodeType: "石場", zoneId: 2956, coords: { x: 31, y: 22 }, level: 80 },
+        { job: "botanist", nodeType: "良材", zoneId: 2957, coords: { x: 24, y: 28 }, level: 80 },
+        { job: "botanist", nodeType: "良材", zoneId: 2958, coords: { x: 19, y: 16 }, level: 80 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2953, coords: { x: 14, y: 21 }, level: 80 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2954, coords: { x: 29, y: 11 }, level: 80 }
+    ],
+
+    // G11 - 陳舊的綠飄龍革地圖 (Lv.80)
+    26744: [
+        { job: "miner", nodeType: "礦脈", zoneId: 2953, coords: { x: 27, y: 19 }, level: 80 },
+        { job: "miner", nodeType: "礦脈", zoneId: 2954, coords: { x: 22, y: 25 }, level: 80 },
+        { job: "miner", nodeType: "石場", zoneId: 2955, coords: { x: 17, y: 13 }, level: 80 },
+        { job: "miner", nodeType: "石場", zoneId: 2956, coords: { x: 31, y: 22 }, level: 80 },
+        { job: "botanist", nodeType: "良材", zoneId: 2957, coords: { x: 24, y: 28 }, level: 80 },
+        { job: "botanist", nodeType: "良材", zoneId: 2958, coords: { x: 19, y: 16 }, level: 80 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2953, coords: { x: 14, y: 21 }, level: 80 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2954, coords: { x: 29, y: 11 }, level: 80 }
+    ],
+
+    // 綠圖 - 深層傳送魔紋的地圖 (Lv.70)
+    19770: [
+        { job: "miner", nodeType: "礦脈", zoneId: 2406, coords: { x: 21, y: 14 }, level: 70 },
+        { job: "miner", nodeType: "礦脈", zoneId: 2407, coords: { x: 18, y: 29 }, level: 70 },
+        { job: "miner", nodeType: "石場", zoneId: 2408, coords: { x: 25, y: 11 }, level: 70 },
+        { job: "miner", nodeType: "石場", zoneId: 2409, coords: { x: 32, y: 18 }, level: 70 },
+        { job: "botanist", nodeType: "良材", zoneId: 2410, coords: { x: 16, y: 22 }, level: 70 },
+        { job: "botanist", nodeType: "良材", zoneId: 2411, coords: { x: 28, y: 31 }, level: 70 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2406, coords: { x: 13, y: 27 }, level: 70 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2407, coords: { x: 22, y: 19 }, level: 70 }
+    ],
+
+    // G10 - 陳舊的瞪羚革地圖 (Lv.70)
+    17836: [
+        { job: "miner", nodeType: "礦脈", zoneId: 2406, coords: { x: 21, y: 14 }, level: 70 },
+        { job: "miner", nodeType: "礦脈", zoneId: 2407, coords: { x: 18, y: 29 }, level: 70 },
+        { job: "miner", nodeType: "石場", zoneId: 2408, coords: { x: 25, y: 11 }, level: 70 },
+        { job: "miner", nodeType: "石場", zoneId: 2409, coords: { x: 32, y: 18 }, level: 70 },
+        { job: "botanist", nodeType: "良材", zoneId: 2410, coords: { x: 16, y: 22 }, level: 70 },
+        { job: "botanist", nodeType: "良材", zoneId: 2411, coords: { x: 28, y: 31 }, level: 70 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2406, coords: { x: 13, y: 27 }, level: 70 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2407, coords: { x: 22, y: 19 }, level: 70 }
+    ],
+
+    // G9 - 陳舊的迦迦納怪鳥革地圖 (Lv.70)
+    17835: [
+        { job: "miner", nodeType: "礦脈", zoneId: 2406, coords: { x: 21, y: 14 }, level: 70 },
+        { job: "miner", nodeType: "礦脈", zoneId: 2407, coords: { x: 18, y: 29 }, level: 70 },
+        { job: "miner", nodeType: "石場", zoneId: 2408, coords: { x: 25, y: 11 }, level: 70 },
+        { job: "miner", nodeType: "石場", zoneId: 2409, coords: { x: 32, y: 18 }, level: 70 },
+        { job: "botanist", nodeType: "良材", zoneId: 2410, coords: { x: 16, y: 22 }, level: 70 },
+        { job: "botanist", nodeType: "良材", zoneId: 2411, coords: { x: 28, y: 31 }, level: 70 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2406, coords: { x: 13, y: 27 }, level: 70 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2407, coords: { x: 22, y: 19 }, level: 70 }
+    ],
+
+    // G8 - 陳舊的巨龍革地圖 (Lv.60)
+    12243: [
+        { job: "miner", nodeType: "礦脈", zoneId: 2200, coords: { x: 22.5, y: 28.2 }, level: 60 },
+        { job: "miner", nodeType: "礦脈", zoneId: 2001, coords: { x: 25.3, y: 25 }, level: 60 },
+        { job: "miner", nodeType: "石場", zoneId: 2002, coords: { x: 27.6, y: 19.2 }, level: 60 },
+        { job: "miner", nodeType: "石場", zoneId: 2100, coords: { x: 19, y: 24 }, level: 60 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2001, coords: { x: 12.9, y: 18.6 }, level: 60 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2200, coords: { x: 11.5, y: 15.2 }, level: 60 },
+        { job: "botanist", nodeType: "良材", zoneId: 2002, coords: { x: 32.5, y: 31.8 }, level: 60 },
+        { job: "botanist", nodeType: "良材", zoneId: 2000, coords: { x: 23, y: 19 }, level: 60 }
+    ],
+
+    // G7 - 陳舊的飛龍革地圖 (Lv.60)
+    12242: [
+        { job: "miner", nodeType: "礦脈", zoneId: 2200, coords: { x: 22.5, y: 28.2 }, level: 60 },
+        { job: "miner", nodeType: "礦脈", zoneId: 2001, coords: { x: 25.3, y: 25 }, level: 60 },
+        { job: "miner", nodeType: "石場", zoneId: 2002, coords: { x: 27.6, y: 19.2 }, level: 60 },
+        { job: "miner", nodeType: "石場", zoneId: 2100, coords: { x: 19, y: 24 }, level: 60 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2001, coords: { x: 12.9, y: 18.6 }, level: 60 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2200, coords: { x: 11.5, y: 15.2 }, level: 60 },
+        { job: "botanist", nodeType: "良材", zoneId: 2002, coords: { x: 32.5, y: 31.8 }, level: 60 },
+        { job: "botanist", nodeType: "良材", zoneId: 2000, coords: { x: 23, y: 19 }, level: 60 }
+    ],
+
+    // G6 - 陳舊的古鳥革地圖 (Lv.60)
+    12241: [
+        { job: "miner", nodeType: "礦脈", zoneId: 2200, coords: { x: 22.5, y: 28.2 }, level: 60 },
+        { job: "miner", nodeType: "礦脈", zoneId: 2001, coords: { x: 25.3, y: 25 }, level: 60 },
+        { job: "miner", nodeType: "石場", zoneId: 2002, coords: { x: 27.6, y: 19.2 }, level: 60 },
+        { job: "miner", nodeType: "石場", zoneId: 2100, coords: { x: 19, y: 24 }, level: 60 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2001, coords: { x: 12.9, y: 18.6 }, level: 60 },
+        { job: "botanist", nodeType: "草叢", zoneId: 2200, coords: { x: 11.5, y: 15.2 }, level: 60 },
+        { job: "botanist", nodeType: "良材", zoneId: 2002, coords: { x: 32.5, y: 31.8 }, level: 60 },
+        { job: "botanist", nodeType: "良材", zoneId: 2000, coords: { x: 23, y: 19 }, level: 60 }
+    ]
+};
+
 // 輔助函數：獲取地圖名稱
 function getMapName(mapId) {
     const map = MAP_DATA[mapId];
@@ -179,6 +352,12 @@ function getItemName(itemId) {
 // 輔助函數：根據物品ID獲取等級信息
 function getGradeByItemId(itemId) {
     return GRADE_DATA.find(g => g.itemId === itemId);
+}
+
+// 輔助函數：獲取採集地點名稱
+function getGatheringZoneNames(grade) {
+    if (!grade.gatheringZoneIds) return [];
+    return grade.gatheringZoneIds.map(id => PLACE_NAMES[id] || `地點 ${id}`);
 }
 
 // 輔助函數：獲取某等級可用的地圖列表

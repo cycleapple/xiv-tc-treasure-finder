@@ -44,6 +44,8 @@ function renderGradeButtons() {
         btn.className = `grade-btn ${grade.special ? 'special' : ''} ${grade.partySize === 8 ? 'party-8' : 'party-1'}`;
         btn.dataset.itemId = grade.itemId;
 
+        const gatheringZones = getGatheringZoneNames(grade);
+
         btn.innerHTML = `
             <span class="grade-label">${grade.grade}</span>
             <span class="grade-name">${grade.name}</span>
@@ -51,6 +53,14 @@ function renderGradeButtons() {
                 <span class="party-badge">${grade.partySize === 8 ? '8人' : '單人'}</span>
                 <span class="expansion-badge">${grade.expansion}</span>
             </span>
+            ${grade.gatheringLevel ? `
+                <span class="gathering-info">
+                    <span class="gathering-level">Lv.${grade.gatheringLevel}</span>
+                </span>
+                <button class="btn-gathering-nodes" data-item-id="${grade.itemId}" onclick="event.stopPropagation(); showGatheringNodes(${grade.itemId}, '${grade.grade}', '${escapeHtml(grade.name)}')">
+                    採集點
+                </button>
+            ` : ''}
         `;
 
         btn.addEventListener('click', () => selectGrade(grade));
@@ -1247,6 +1257,74 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// ============================================
+// 採集點功能
+// ============================================
+
+// 顯示採集點 Modal
+function showGatheringNodes(itemId, gradeName, mapName) {
+    const nodes = GATHERING_NODES[itemId];
+    if (!nodes || nodes.length === 0) {
+        alert('暫無採集點資料');
+        return;
+    }
+
+    // 更新標題
+    document.getElementById('gathering-modal-title').textContent =
+        `${gradeName} - ${mapName} 採集點`;
+
+    // 按職業分組
+    const minerNodes = nodes.filter(n => n.job === 'miner');
+    const botanistNodes = nodes.filter(n => n.job === 'botanist');
+
+    // 生成 HTML
+    let html = '';
+
+    if (minerNodes.length > 0) {
+        html += `<div class="gathering-job-section">
+            <h3 class="gathering-job-title">採掘師</h3>
+            ${minerNodes.map(renderNodeCard).join('')}
+        </div>`;
+    }
+
+    if (botanistNodes.length > 0) {
+        html += `<div class="gathering-job-section">
+            <h3 class="gathering-job-title">園藝師</h3>
+            ${botanistNodes.map(renderNodeCard).join('')}
+        </div>`;
+    }
+
+    document.getElementById('gathering-nodes-content').innerHTML = html;
+    openModal('modal-gathering-nodes');
+}
+
+// 渲染單個節點卡片 - 使用 zoneId 參照 PLACE_NAMES
+function renderNodeCard(node) {
+    const zoneName = PLACE_NAMES[node.zoneId] || `地點 ${node.zoneId}`;
+    const posCmd = `/pos ${node.coords.x} ${node.coords.y}`;
+    return `
+        <div class="gathering-node-card">
+            <div class="node-type">${node.nodeType}</div>
+            <div class="node-zone">${zoneName}</div>
+            <div class="node-coords">X: ${node.coords.x} Y: ${node.coords.y}</div>
+            <div class="node-level">Lv.${node.level}</div>
+            <button class="btn-copy-coords" onclick="copyNodeCoords('${posCmd}', this)">複製座標</button>
+        </div>
+    `;
+}
+
+// 複製節點座標
+function copyNodeCoords(posCmd, btn) {
+    navigator.clipboard.writeText(posCmd).then(() => {
+        btn.textContent = '已複製';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = '複製座標';
+            btn.classList.remove('copied');
+        }, 1500);
+    });
 }
 
 // 頁面載入時初始化
