@@ -715,3 +715,1002 @@ footer a:hover {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--text-secondary);
 }
+
+/* ============================================
+   隊伍功能樣式
+   ============================================ */
+
+/* 隊伍按鈕 */
+.btn-party {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-party:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.btn-party-join {
+    background: var(--success);
+}
+
+.btn-party-join:hover {
+    background: #4a8c59;
+}
+
+.btn-party-leave {
+    background: var(--error);
+}
+
+.btn-party-leave:hover {
+    background: #c82333;
+}
+
+/* 連線狀態指示器 */
+.connection-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    background: var(--bg-tertiary);
+}
+
+.connection-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+}
+
+.connection-status.connected .connection-dot {
+    background: var(--success);
+    animation: pulse-dot 2s infinite;
+}
+
+.connection-status.disconnected .connection-dot {
+    background: var(--error);
+}
+
+.connection-status.syncing .connection-dot {
+    background: var(--warning);
+    animation: pulse-dot 0.5s infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Modal 樣式 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 420px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(-20px);
+    transition: transform 0.3s;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-overlay.active .modal {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    font-size: 1.5rem;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: var(--text-primary);
+}
+
+.modal-body {
+    margin-bottom: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* 表單輸入 */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.form-input::placeholder {
+    color: var(--text-muted);
+}
+
+.form-input.code-input {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 1.3rem;
+    text-align: center;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.form-hint {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.form-error {
+    color: var(--error);
+}
+
+/* 隊伍代碼顯示 */
+.party-code-display {
+    background: var(--bg-tertiary);
+    border: 2px dashed var(--accent);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    margin: 16px 0;
+}
+
+.party-code {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--accent-gold);
+    letter-spacing: 4px;
+    margin-bottom: 12px;
+}
+
+.copy-code-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.copy-code-btn:hover {
+    background: var(--accent-hover);
+}
+
+.copy-code-btn.copied {
+    background: var(--success);
+}
+
+/* 按鈕樣式 */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+.btn-success:hover {
+    background: #4a8c59;
+}
+
+.btn-danger {
+    background: var(--error);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+.btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--border);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+/* 隊伍面板 */
+.party-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.party-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.party-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.party-panel-code {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.9rem;
+    color: var(--accent-gold);
+    background: var(--bg-tertiary);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+/* 成員列表 */
+.members-section {
+    margin-bottom: 16px;
+}
+
+.section-title {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.members-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.member-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--bg-tertiary);
+    border-radius: 16px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.member-tag.is-self {
+    background: var(--accent);
+    color: white;
+}
+
+.member-tag.is-leader::after {
+    content: '★';
+    color: var(--accent-gold);
+    margin-left: 2px;
+}
+
+/* 隊伍藏寶圖列表 */
+.party-treasures-section {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+.party-treasures-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.party-treasure-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: var(--bg-tertiary);
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.party-treasure-item:hover {
+    background: var(--bg-secondary);
+}
+
+.party-treasure-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.party-treasure-name {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.party-treasure-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.party-treasure-coords {
+    color: var(--accent-gold);
+}
+
+.party-treasure-remove {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+.party-treasure-remove:hover {
+    color: var(--error);
+}
+
+/* 空狀態 */
+.empty-state {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* 藏寶圖卡片上的隊伍按鈕 */
+.add-to-party-btn {
+    position: absolute;
+    z-index: 5;
+    bottom: 12px;
+    right: 50px;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.7);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.add-to-party-btn:hover {
+    background: var(--success);
+    transform: scale(1.1);
+}
+
+.add-to-party-btn.added {
+    background: var(--success);
+}
+
+.add-to-party-btn.added::after {
+    content: '✓';
+    position: absolute;
+    font-size: 12px;
+}
+
+.add-to-party-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Firebase 未設定警告 */
+.firebase-warning {
+    background: var(--warning);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+
+.firebase-warning a {
+    color: white;
+    text-decoration: underline;
+}
+
+/* ============================================
+   隊伍模式面板 - 完整版
+   ============================================ */
+
+.party-mode-panel {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 2px solid var(--accent);
+}
+
+.party-mode-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.party-mode-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.party-mode-title {
+    font-size: 1.4rem;
+    color: var(--accent-gold);
+    margin: 0;
+}
+
+/* 隊伍過期倒數計時 */
+.party-expiry {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--bg-tertiary);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.party-expiry::before {
+    content: '剩餘時間:';
+    color: var(--text-muted);
+}
+
+.expiry-time {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.expiry-time.expiry-warning {
+    color: var(--warning);
+    animation: pulse-expiry 1s infinite;
+}
+
+.expiry-expired {
+    color: var(--error);
+    font-weight: bold;
+}
+
+@keyframes pulse-expiry {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.party-code-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-tertiary);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.party-code-badge code {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 1rem;
+    color: var(--accent-gold);
+    letter-spacing: 1px;
+}
+
+.party-mode-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-icon {
+    background: var(--bg-tertiary);
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-icon:hover {
+    background: var(--accent);
+    color: white;
+}
+
+/* 成員列 */
+.party-members-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    flex-wrap: wrap;
+}
+
+.members-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+/* 主要內容區 */
+.party-mode-content {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 20px;
+    min-height: 400px;
+}
+
+/* 路線列表 */
+.party-route-list {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.route-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border);
+}
+
+.route-list-header h3 {
+    font-size: 1rem;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.route-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.route-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.route-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 40px;
+}
+
+.route-empty .hint {
+    font-size: 0.85rem;
+    margin-top: 8px;
+}
+
+/* 路線項目卡片 */
+.route-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.route-item:hover {
+    border-color: var(--accent);
+}
+
+.route-item.active {
+    border-color: var(--accent-gold);
+    background: var(--bg-card-hover);
+}
+
+.route-item.completed {
+    opacity: 0.5;
+}
+
+.route-item.completed .route-item-info {
+    text-decoration: line-through;
+}
+
+.route-item-order {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.route-item-number {
+    width: 28px;
+    height: 28px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.route-item.active .route-item-number {
+    background: var(--accent-gold);
+}
+
+.route-item.completed .route-item-number {
+    background: var(--success);
+}
+
+.route-item.completed .route-item-number::after {
+    content: '✓';
+}
+
+.route-item.completed .route-item-number span {
+    display: none;
+}
+
+.route-order-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.route-order-btns button {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    font-size: 10px;
+}
+
+.route-order-btns button:hover {
+    color: var(--accent);
+}
+
+.route-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.route-item-map {
+    font-weight: bold;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.route-item-details {
+    display: flex;
+    gap: 12px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.route-item-coords {
+    color: var(--accent-gold);
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.route-item-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.route-item-actions button {
+    background: var(--bg-tertiary);
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.route-item-actions button:hover {
+    background: var(--accent);
+    color: white;
+}
+
+.route-item-actions button.btn-complete:hover {
+    background: var(--success);
+}
+
+.route-item-actions button.btn-remove:hover {
+    background: var(--error);
+}
+
+/* 地圖預覽 */
+.party-map-preview {
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.map-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border);
+}
+
+.map-preview-header h3 {
+    font-size: 1rem;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.map-select {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.map-preview-container {
+    position: relative;
+    aspect-ratio: 1;
+    background: var(--bg-tertiary);
+    overflow: hidden;
+}
+
+.preview-map-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.preview-map-markers {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.preview-marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    background: var(--accent);
+    border: 2px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+.preview-marker:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+    z-index: 15;
+}
+
+.preview-marker.active {
+    background: var(--accent-gold);
+    transform: translate(-50%, -50%) scale(1.3);
+    z-index: 20;
+}
+
+.preview-marker.completed {
+    background: var(--success);
+    opacity: 0.6;
+}
+
+.map-preview-info {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* 響應式 - 隊伍模式 */
+@media (max-width: 900px) {
+    .party-mode-content {
+        grid-template-columns: 1fr;
+    }
+
+    .party-map-preview {
+        order: -1;
+    }
+
+    .map-preview-container {
+        max-height: 300px;
+    }
+}
+
+@media (max-width: 600px) {
+    .party-mode-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .party-mode-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .party-mode-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+/* 響應式調整 */
+@media (max-width: 600px) {
+    .modal {
+        padding: 16px;
+        width: 95%;
+    }
+
+    .party-code {
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+    }
+
+    .party-panel {
+        padding: 12px;
+    }
+
+    .header-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn-header {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+}

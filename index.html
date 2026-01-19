@@ -46,6 +46,29 @@
             <h1>FFXIV 繁中藏寶圖查詢器</h1>
             <p class="subtitle">快速查找各等級藏寶圖位置 - 選擇藏寶圖等級開始</p>
             <div class="header-buttons">
+                <!-- 隊伍按鈕 (未加入隊伍時顯示) -->
+                <button id="btn-create-party" class="btn-header btn-party" title="建立新隊伍">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                    </svg>
+                    建立隊伍
+                </button>
+                <button id="btn-join-party" class="btn-header btn-party btn-party-join" title="加入現有隊伍">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                    </svg>
+                    加入隊伍
+                </button>
+                <!-- 隊伍狀態按鈕 (已加入隊伍時顯示) -->
+                <button id="btn-party-status" class="btn-header btn-party hidden" title="查看隊伍狀態">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                    </svg>
+                    <span id="party-status-text">隊伍</span>
+                    <span id="connection-indicator" class="connection-status connected">
+                        <span class="connection-dot"></span>
+                    </span>
+                </button>
                 <a href="https://discord.gg/X556xjySDG" target="_blank" class="btn-header btn-discord">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
@@ -60,6 +83,83 @@
                 </a>
             </div>
         </header>
+
+        <!-- 隊伍模式面板 -->
+        <section class="party-mode-panel hidden" id="party-mode-panel">
+            <div class="party-mode-header">
+                <div class="party-mode-info">
+                    <h2 class="party-mode-title">隊伍模式</h2>
+                    <div class="party-code-badge">
+                        <span>代碼：</span>
+                        <code id="panel-party-code">--------</code>
+                        <button class="btn-icon" id="btn-copy-panel-code" title="複製代碼">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="panel-connection-status" class="connection-status connected">
+                        <span class="connection-dot"></span>
+                        <span>已連線</span>
+                    </div>
+                    <div class="party-expiry" id="party-expiry-display">
+                        <!-- 倒數計時由 JS 生成 -->
+                    </div>
+                </div>
+                <div class="party-mode-actions">
+                    <button class="btn btn-secondary btn-sm" id="btn-add-treasure-mode">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                        新增藏寶圖
+                    </button>
+                    <button class="btn btn-danger btn-sm" id="btn-leave-party-panel">離開隊伍</button>
+                </div>
+            </div>
+
+            <!-- 成員列表 -->
+            <div class="party-members-bar">
+                <span class="members-label">成員：</span>
+                <div class="members-list" id="panel-members-list"></div>
+            </div>
+
+            <!-- 主要內容區 -->
+            <div class="party-mode-content">
+                <!-- 左側：藏寶圖路線列表 -->
+                <div class="party-route-list">
+                    <div class="route-list-header">
+                        <h3>藏寶圖路線 (<span id="route-count">0</span>)</h3>
+                        <div class="route-actions">
+                            <button class="btn-icon" id="btn-clear-completed" title="清除已完成">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="route-items" id="route-items">
+                        <!-- 路線項目由 JS 生成 -->
+                    </div>
+                </div>
+
+                <!-- 右側：地圖預覽 -->
+                <div class="party-map-preview">
+                    <div class="map-preview-header">
+                        <h3>路線地圖</h3>
+                        <select id="preview-map-select" class="map-select">
+                            <option value="">選擇地圖</option>
+                        </select>
+                    </div>
+                    <div class="map-preview-container">
+                        <img id="preview-map-image" class="preview-map-image" alt="地圖預覽">
+                        <div id="preview-map-markers" class="preview-map-markers"></div>
+                    </div>
+                    <div class="map-preview-info" id="preview-info">
+                        <p>選擇藏寶圖查看詳情</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- 步驟 1: 選擇藏寶圖等級 -->
         <section class="step-section" id="step-grade">
@@ -125,7 +225,121 @@
         </footer>
     </div>
 
+    <!-- 建立隊伍 Modal -->
+    <div class="modal-overlay" id="modal-create-party">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">建立隊伍</h3>
+                <button class="modal-close" data-close-modal>&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">你的暱稱 (可選)</label>
+                    <input type="text" class="form-input" id="create-nickname" placeholder="留空則使用預設暱稱" maxlength="20">
+                </div>
+                <div id="create-party-result" class="hidden">
+                    <p style="margin-bottom: 12px; color: var(--text-secondary);">分享以下代碼給隊友：</p>
+                    <div class="party-code-display">
+                        <div class="party-code" id="created-party-code">--------</div>
+                        <button class="copy-code-btn" id="copy-party-code">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                            </svg>
+                            複製代碼
+                        </button>
+                    </div>
+                </div>
+                <p id="create-party-error" class="form-hint form-error hidden"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-close-modal>取消</button>
+                <button class="btn btn-primary" id="btn-confirm-create">建立隊伍</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加入隊伍 Modal -->
+    <div class="modal-overlay" id="modal-join-party">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">加入隊伍</h3>
+                <button class="modal-close" data-close-modal>&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">隊伍代碼</label>
+                    <input type="text" class="form-input code-input" id="join-party-code" placeholder="輸入 8 位代碼" maxlength="8">
+                    <p class="form-hint">請輸入隊長提供的 8 位代碼</p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">你的暱稱 (可選)</label>
+                    <input type="text" class="form-input" id="join-nickname" placeholder="留空則使用預設暱稱" maxlength="20">
+                </div>
+                <p id="join-party-error" class="form-hint form-error hidden"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-close-modal>取消</button>
+                <button class="btn btn-success" id="btn-confirm-join">加入隊伍</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 隊伍狀態 Modal -->
+    <div class="modal-overlay" id="modal-party-status">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">隊伍狀態</h3>
+                <button class="modal-close" data-close-modal>&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="party-panel" style="border: none; padding: 0; margin: 0;">
+                    <div class="party-panel-header" style="padding-bottom: 12px;">
+                        <div class="party-panel-title">
+                            <span>隊伍代碼：</span>
+                            <span class="party-panel-code" id="status-party-code">--------</span>
+                            <button class="copy-code-btn btn-sm" id="copy-status-code" style="padding: 4px 8px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="modal-connection-status" class="connection-status connected">
+                            <span class="connection-dot"></span>
+                            <span id="modal-connection-text">已連線</span>
+                        </div>
+                    </div>
+
+                    <!-- 成員列表 -->
+                    <div class="members-section">
+                        <div class="section-title">成員 (<span id="member-count">0</span>)</div>
+                        <div class="members-list" id="members-list">
+                            <!-- 成員由 JS 生成 -->
+                        </div>
+                    </div>
+
+                    <!-- 隊伍藏寶圖列表 -->
+                    <div class="party-treasures-section">
+                        <div class="section-title">隊伍藏寶圖 (<span id="party-treasure-count">0</span>)</div>
+                        <div class="party-treasures-list" id="party-treasures-list">
+                            <div class="empty-state" id="party-treasures-empty">
+                                尚未新增任何藏寶圖
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="btn-leave-party">離開隊伍</button>
+                <button class="btn btn-secondary" data-close-modal>關閉</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/data.js"></script>
+    <script src="js/party/firebase-config.js"></script>
+    <script src="js/party/auth-service.js"></script>
+    <script src="js/party/party-service.js"></script>
+    <script src="js/party/sync-service.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

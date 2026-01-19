@@ -1,0 +1,31 @@
+{
+  "rules": {
+    "parties": {
+      "$partyCode": {
+        // 允許讀取隊伍資料 (已登入用戶)
+        ".read": "auth != null",
+
+        "meta": {
+          // 只允許建立者寫入 meta，或初次建立
+          ".write": "auth != null && (!data.exists() || data.child('createdBy').val() == auth.uid || root.child('parties').child($partyCode).child('members').child(auth.uid).exists())"
+        },
+
+        "members": {
+          "$memberId": {
+            // 成員只能操作自己的資料，且人數不能超過 8 人
+            ".write": "auth != null && $memberId == auth.uid && (data.exists() || data.parent().numChildren() < 8)",
+            ".validate": "newData.hasChildren(['joinedAt', 'nickname']) && newData.child('nickname').isString() && newData.child('nickname').val().length <= 20"
+          }
+        },
+
+        "treasures": {
+          "$treasureId": {
+            // 隊伍成員可以新增/移除藏寶圖
+            ".write": "auth != null && root.child('parties').child($partyCode).child('members').child(auth.uid).exists()",
+            ".validate": "!newData.exists() || newData.hasChildren(['id', 'coords', 'mapId', 'gradeItemId', 'addedBy', 'addedAt'])"
+          }
+        }
+      }
+    }
+  }
+}
