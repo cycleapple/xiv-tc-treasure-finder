@@ -1714,3 +1714,55 @@ footer a:hover {
         justify-content: center;
     }
 }
+
+/* ============================================
+   重連按鈕樣式
+   ============================================ */
+
+#btn-reconnect-party {
+    background: var(--warning);
+    color: white;
+    animation: pulse-reconnect 2s infinite;
+}
+
+#btn-reconnect-party:hover {
+    background: #7a6a48;
+}
+
+#btn-reconnect-party:disabled {
+    animation: none;
+    opacity: 0.8;
+}
+
+#btn-cancel-reconnect {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+
+#btn-cancel-reconnect:hover {
+    background: var(--border);
+}
+
+@keyframes pulse-reconnect {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(145, 125, 84, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(145, 125, 84, 0);
+    }
+}
+
+/* 旋轉動畫 */
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

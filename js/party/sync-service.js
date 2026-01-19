@@ -11,6 +11,8 @@ const SyncService = (function() {
 
     // 連線狀態
     let isConnected = false;
+    let currentPartyCode = null;
+    let presenceSetup = false;
 
     // 回調函數
     let callbacks = {
@@ -99,17 +101,44 @@ const SyncService = (function() {
 
         metaUnsubscribe = () => sdk.off(metaRef);
 
-        // 監聽連線狀態
+        // 監聽連線狀態並設定 Presence 系統
         const connectedRef = getRef('.info/connected');
-        sdk.onValue(connectedRef, (snapshot) => {
+        sdk.onValue(connectedRef, async (snapshot) => {
+            const wasConnected = isConnected;
             isConnected = snapshot.val() === true;
             console.log('連線狀態:', isConnected ? '已連線' : '離線');
+
+            // 當連線建立時，設定 onDisconnect
+            if (isConnected && !presenceSetup) {
+                await setupPresence(partyCode);
+            }
+
             if (callbacks.onConnectionChange) {
                 callbacks.onConnectionChange(isConnected);
             }
         });
 
         connectionUnsubscribe = () => sdk.off(connectedRef);
+        currentPartyCode = partyCode;
+    }
+
+    // 設定 Presence 系統 (斷線自動移除成員)
+    async function setupPresence(partyCode) {
+        const sdk = window.FirebaseSDK;
+        if (!sdk || !sdk.onDisconnect) return;
+
+        const userId = AuthService.getUserId();
+        if (!userId) return;
+
+        try {
+            const memberRef = getRef(`parties/${partyCode}/members/${userId}`);
+            // 設定斷線時自動移除此成員
+            await sdk.onDisconnect(memberRef).remove();
+            presenceSetup = true;
+            console.log('Presence 系統已設定：斷線時將自動移除成員');
+        } catch (error) {
+            console.error('設定 Presence 失敗:', error);
+        }
     }
 
     // 停止同步
@@ -130,6 +159,9 @@ const SyncService = (function() {
             connectionUnsubscribe();
             connectionUnsubscribe = null;
         }
+        // 重置 Presence 狀態
+        currentPartyCode = null;
+        presenceSetup = false;
         console.log('已停止同步');
     }
 

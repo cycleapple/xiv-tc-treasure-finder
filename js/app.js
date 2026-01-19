@@ -10,6 +10,7 @@ let partyTreasures = [];
 let selectedRouteItem = null;
 let isAddingTreasureMode = false;
 let partyExpiryTimer = null;
+let isReconnecting = false;
 
 // DOM 元素
 const stepGrade = document.getElementById('step-grade');
@@ -334,7 +335,116 @@ async function initializePartySystem() {
     // 只綁定事件，不初始化 Firebase 連線
     // Firebase 連線會在使用者建立/加入隊伍時才建立
     bindPartyEvents();
+
+    // 檢查是否有已儲存的隊伍狀態 (用於重連)
+    if (PartyService.hasSavedPartyState()) {
+        showReconnectPrompt();
+    }
+
     console.log('隊伍系統就緒 (延遲連線模式)');
+}
+
+// 顯示重連提示
+function showReconnectPrompt() {
+    const btnCreate = document.getElementById('btn-create-party');
+    const btnJoin = document.getElementById('btn-join-party');
+
+    // 隱藏建立/加入按鈕，顯示重連按鈕
+    if (btnCreate) btnCreate.classList.add('hidden');
+    if (btnJoin) btnJoin.classList.add('hidden');
+
+    // 創建重連按鈕
+    const reconnectBtn = document.createElement('button');
+    reconnectBtn.id = 'btn-reconnect-party';
+    reconnectBtn.className = 'btn-header btn-party';
+    reconnectBtn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+        </svg>
+        重新連線
+    `;
+    reconnectBtn.addEventListener('click', handleReconnect);
+
+    // 創建取消按鈕
+    const cancelBtn = document.createElement('button');
+    cancelBtn.id = 'btn-cancel-reconnect';
+    cancelBtn.className = 'btn-header btn-secondary';
+    cancelBtn.textContent = '取消';
+    cancelBtn.addEventListener('click', cancelReconnect);
+
+    // 插入按鈕
+    const headerButtons = document.querySelector('.header-buttons');
+    if (headerButtons) {
+        headerButtons.insertBefore(reconnectBtn, headerButtons.firstChild);
+        headerButtons.insertBefore(cancelBtn, reconnectBtn.nextSibling);
+    }
+}
+
+// 處理重連
+async function handleReconnect() {
+    const reconnectBtn = document.getElementById('btn-reconnect-party');
+    if (reconnectBtn) {
+        reconnectBtn.disabled = true;
+        reconnectBtn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="spin">
+                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+            </svg>
+            重新連線中...
+        `;
+    }
+
+    isReconnecting = true;
+
+    try {
+        // 確保 Firebase 已連線
+        const connected = await ensureFirebaseConnected();
+        if (!connected) {
+            throw new Error('無法連接伺服器');
+        }
+
+        // 嘗試重新加入隊伍
+        const partyCode = await PartyService.tryRejoinParty();
+
+        if (partyCode) {
+            // 重連成功
+            SyncService.startSync(partyCode);
+            updatePartyButtonsUI(true);
+            document.getElementById('status-party-code').textContent = partyCode;
+            removeReconnectButtons();
+            console.log('重連成功:', partyCode);
+        } else {
+            // 重連失敗，隊伍可能已不存在
+            cancelReconnect();
+            alert('隊伍已不存在或已過期');
+        }
+    } catch (error) {
+        console.error('重連失敗:', error);
+        cancelReconnect();
+        alert('重連失敗: ' + error.message);
+    } finally {
+        isReconnecting = false;
+    }
+}
+
+// 取消重連
+function cancelReconnect() {
+    // 清除儲存的狀態
+    PartyService.clearPartyState();
+    removeReconnectButtons();
+
+    // 顯示建立/加入按鈕
+    const btnCreate = document.getElementById('btn-create-party');
+    const btnJoin = document.getElementById('btn-join-party');
+    if (btnCreate) btnCreate.classList.remove('hidden');
+    if (btnJoin) btnJoin.classList.remove('hidden');
+}
+
+// 移除重連按鈕
+function removeReconnectButtons() {
+    const reconnectBtn = document.getElementById('btn-reconnect-party');
+    const cancelBtn = document.getElementById('btn-cancel-reconnect');
+    if (reconnectBtn) reconnectBtn.remove();
+    if (cancelBtn) cancelBtn.remove();
 }
 
 // 確保 Firebase 已連線 (延遲初始化)

@@ -11,12 +11,59 @@ const PartyService = (function() {
     const MAX_MEMBERS = 8;
     const PARTY_EXPIRY_HOURS = 12;
     const PARTY_EXPIRY_MS = PARTY_EXPIRY_HOURS * 60 * 60 * 1000;
+    const STORAGE_KEY = 'ffxiv_treasure_party';
 
     // 當前隊伍狀態
     let currentPartyCode = null;
     let currentMemberId = null;
     let memberNickname = null;
     let currentPartyExpiresAt = null;
+
+    // ========== localStorage 管理 ==========
+
+    // 儲存隊伍狀態到 localStorage
+    function savePartyState() {
+        if (!currentPartyCode || !memberNickname) return;
+        try {
+            const state = {
+                partyCode: currentPartyCode,
+                nickname: memberNickname,
+                savedAt: Date.now()
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            console.log('隊伍狀態已儲存');
+        } catch (e) {
+            console.warn('無法儲存隊伍狀態:', e);
+        }
+    }
+
+    // 從 localStorage 載入隊伍狀態
+    function loadPartyState() {
+        try {
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (!data) return null;
+            const state = JSON.parse(data);
+            // 檢查是否過期 (超過 12 小時的儲存視為無效)
+            if (Date.now() - state.savedAt > PARTY_EXPIRY_MS) {
+                clearPartyState();
+                return null;
+            }
+            return state;
+        } catch (e) {
+            console.warn('無法載入隊伍狀態:', e);
+            return null;
+        }
+    }
+
+    // 清除 localStorage 中的隊伍狀態
+    function clearPartyState() {
+        try {
+            localStorage.removeItem(STORAGE_KEY);
+            console.log('隊伍狀態已清除');
+        } catch (e) {
+            console.warn('無法清除隊伍狀態:', e);
+        }
+    }
 
     // 生成隊伍代碼
     function generatePartyCode() {
@@ -102,6 +149,9 @@ const PartyService = (function() {
         currentPartyCode = partyCode;
         currentMemberId = userId;
 
+        // 儲存到 localStorage (用於重連)
+        savePartyState();
+
         console.log(`隊伍建立成功: ${partyCode}`);
         return partyCode;
     }
@@ -166,6 +216,9 @@ const PartyService = (function() {
         currentPartyCode = partyCode;
         currentMemberId = userId;
 
+        // 儲存到 localStorage (用於重連)
+        savePartyState();
+
         console.log(`已加入隊伍: ${partyCode}`);
         return partyCode;
     }
@@ -206,6 +259,9 @@ const PartyService = (function() {
         currentMemberId = null;
         memberNickname = null;
         currentPartyExpiresAt = null;
+
+        // 清除 localStorage
+        clearPartyState();
 
         console.log(`已離開隊伍: ${oldCode}`);
     }
@@ -429,6 +485,32 @@ const PartyService = (function() {
         return snapshot.val();
     }
 
+    // 嘗試重新加入隊伍 (從 localStorage 恢復)
+    async function tryRejoinParty() {
+        const savedState = loadPartyState();
+        if (!savedState) {
+            return null;
+        }
+
+        console.log('嘗試重新加入隊伍:', savedState.partyCode);
+
+        try {
+            // 嘗試重新加入
+            await joinParty(savedState.partyCode, savedState.nickname);
+            return savedState.partyCode;
+        } catch (error) {
+            console.log('重新加入失敗:', error.message);
+            // 清除無效的儲存狀態
+            clearPartyState();
+            return null;
+        }
+    }
+
+    // 檢查是否有已儲存的隊伍狀態
+    function hasSavedPartyState() {
+        return loadPartyState() !== null;
+    }
+
     return {
         generatePartyCode,
         isValidCodeFormat,
@@ -448,7 +530,11 @@ const PartyService = (function() {
         getPartyData,
         getExpiresAt,
         setExpiresAt,
-        getMaxMembers
+        getMaxMembers,
+        // 重連相關
+        tryRejoinParty,
+        hasSavedPartyState,
+        clearPartyState
     };
 })();
 

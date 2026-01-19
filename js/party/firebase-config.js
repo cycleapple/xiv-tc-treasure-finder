@@ -40,7 +40,7 @@ async function initializeFirebase() {
         // 使用 ES Module 方式載入 Firebase (v12.8.0)
         const { initializeApp } = await import('https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js');
         const { getAuth, signInAnonymously, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js');
-        const { getDatabase, ref, set, get, push, remove, onValue, off, serverTimestamp, runTransaction } = await import('https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js');
+        const { getDatabase, ref, set, get, push, remove, onValue, off, serverTimestamp, runTransaction, onDisconnect } = await import('https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js');
 
         // 初始化應用程式
         firebaseApp = initializeApp(firebaseConfig);
@@ -61,7 +61,8 @@ async function initializeFirebase() {
             onValue,
             off,
             serverTimestamp,
-            runTransaction
+            runTransaction,
+            onDisconnect
         };
 
         console.log('Firebase 初始化成功');
