@@ -144,6 +144,7 @@ function renderTreasures() {
             <div class="treasure-marker-icon">
                 <img src="assets/icons/treasure_marker.png" alt="標記">
             </div>
+            <div class="card-number shadow-text">${index + 1}</div>
             <div class="position shadow-text">
                 X: ${treasure.coords.x.toFixed(1)} Y: ${treasure.coords.y.toFixed(1)}
             </div>

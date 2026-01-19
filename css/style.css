@@ -398,6 +398,17 @@ header h1 {
     filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
 }
 
+/* 卡片編號 - 左上角 */
+.card-number {
+    position: absolute;
+    z-index: 5;
+    top: 8px;
+    left: 12px;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+}
+
 /* 座標顯示 - 右上角 */
 .position {
     position: absolute;
