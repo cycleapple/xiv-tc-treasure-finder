@@ -335,6 +335,180 @@ const GATHERING_NODES = {
     ]
 };
 
+// 傳送點座標資料 (從 datamining 提取)
+// zoneId = PlaceName ID (對應 PLACE_NAMES)
+const ZONE_AETHERYTES = {
+    // === 7.0 黃金遺產 ===
+    // 克扎瑪烏卡濕地
+    4506: [
+        { name: "哈努聚落", coords: { x: 18.1, y: 11.9 } },
+        { name: "朋友的燈火", coords: { x: 32.3, y: 25.6 } },
+        { name: "土陶郡", coords: { x: 11.9, y: 27.7 } },
+        { name: "水果碼頭", coords: { x: 37.2, y: 16.8 } }
+    ],
+    // 亞克特爾樹海
+    4507: [
+        { name: "紅豹村", coords: { x: 13.5, y: 12.8 } },
+        { name: "瑪穆克", coords: { x: 35.9, y: 32.0 } }
+    ],
+    // 夏勞尼荒野
+    4508: [
+        { name: "胡薩塔伊驛鎮", coords: { x: 29.1, y: 30.8 } },
+        { name: "美花黑澤恩", coords: { x: 27.7, y: 10.1 } },
+        { name: "謝申內青磷泉", coords: { x: 15.6, y: 19.2 } }
+    ],
+    // 遺產之地
+    4509: [
+        { name: "亞斯拉尼站", coords: { x: 31.8, y: 25.6 } },
+        { name: "雷轉質礦場", coords: { x: 17.1, y: 23.9 } },
+        { name: "邊郊鎮", coords: { x: 17.0, y: 9.8 } }
+    ],
+
+    // === 6.0 曉月終焉 ===
+    // 迷津
+    3708: [
+        { name: "公堂保管院", coords: { x: 30.3, y: 11.9 } },
+        { name: "小薩雷安", coords: { x: 21.6, y: 20.5 } },
+        { name: "無路總部", coords: { x: 6.9, y: 27.5 } }
+    ],
+    // 薩維奈島
+    3709: [
+        { name: "新港", coords: { x: 25.4, y: 34.0 } },
+        { name: "代米爾遺烈鄉", coords: { x: 11.0, y: 22.2 } },
+        { name: "波洛伽護法村", coords: { x: 29.6, y: 16.5 } }
+    ],
+    // 嘆息海
+    3711: [
+        { name: "淚灣", coords: { x: 10.1, y: 34.5 } },
+        { name: "最佳威兔洞", coords: { x: 21.5, y: 11.2 } }
+    ],
+    // 天外天垓
+    3712: [
+        { name: "半途終旅", coords: { x: 10.6, y: 26.8 } },
+        { name: "異亞村落", coords: { x: 22.7, y: 8.3 } },
+        { name: "奧密克戎基地", coords: { x: 31.3, y: 28.1 } }
+    ],
+    // 厄爾庇斯
+    3713: [
+        { name: "醒悟天測園", coords: { x: 24.6, y: 24.0 } },
+        { name: "十二奇園", coords: { x: 8.8, y: 32.3 } },
+        { name: "創作者之家", coords: { x: 10.9, y: 17.0 } }
+    ],
+
+    // === 5.0 暗影乾漬 ===
+    // 雷克蘭德
+    2953: [
+        { name: "喬布要塞", coords: { x: 36.6, y: 20.9 } },
+        { name: "奧斯塔爾嚴命城", coords: { x: 6.8, y: 16.9 } }
+    ],
+    // 珂露西亞島
+    2954: [
+        { name: "滯潮村", coords: { x: 34.8, y: 27.3 } },
+        { name: "工匠村", coords: { x: 16.6, y: 29.2 } },
+        { name: "特美拉村", coords: { x: 13.0, y: 9.0 } }
+    ],
+    // 安穆·艾蘭
+    2955: [
+        { name: "鼴靈市集", coords: { x: 26.4, y: 17.0 } },
+        { name: "上路客店", coords: { x: 29.5, y: 27.6 } },
+        { name: "絡尾部落", coords: { x: 11.3, y: 17.2 } }
+    ],
+    // 伊爾美格
+    2956: [
+        { name: "群花館", coords: { x: 14.6, y: 31.7 } },
+        { name: "普拉恩尼茸洞", coords: { x: 20.0, y: 4.3 } },
+        { name: "雲村", coords: { x: 29.1, y: 7.7 } }
+    ],
+    // 拉凱提卡大森林
+    2957: [
+        { name: "蛇行枝", coords: { x: 19.4, y: 27.4 } },
+        { name: "法諾村", coords: { x: 29.1, y: 17.6 } }
+    ],
+    // 黑風海
+    2958: [
+        { name: "鰭人潮池", coords: { x: 32.7, y: 17.5 } },
+        { name: "馬克連薩斯廣場", coords: { x: 18.6, y: 25.8 } }
+    ],
+
+    // === 4.0 紅蓮解放 ===
+    // 基拉巴尼亞邊區
+    2406: [
+        { name: "對等石", coords: { x: 29.8, y: 26.4 } },
+        { name: "帝國東方堡", coords: { x: 8.9, y: 11.3 } }
+    ],
+    // 基拉巴尼亞山區
+    2407: [
+        { name: "阿拉加納", coords: { x: 23.7, y: 6.5 } },
+        { name: "阿拉基利", coords: { x: 16.1, y: 36.4 } }
+    ],
+    // 基拉巴尼亞湖區
+    2408: [
+        { name: "天營門", coords: { x: 8.5, y: 21.1 } },
+        { name: "阿拉米格人居住區", coords: { x: 33.8, y: 34.5 } }
+    ],
+    // 紅玉海
+    2409: [
+        { name: "碧玉水", coords: { x: 28.7, y: 16.2 } },
+        { name: "痙攣寨", coords: { x: 23.2, y: 9.8 } }
+    ],
+    // 延夏
+    2410: [
+        { name: "茨菰村", coords: { x: 30.1, y: 19.7 } },
+        { name: "烈士庵", coords: { x: 26.4, y: 13.4 } }
+    ],
+    // 太陽神草原
+    2411: [
+        { name: "重逢市集", coords: { x: 32.6, y: 28.3 } },
+        { name: "晨曦王座", coords: { x: 23.0, y: 22.1 } },
+        { name: "朵洛衣樓", coords: { x: 6.4, y: 23.8 } }
+    ],
+
+    // === 3.0 蒼天伊修加德 ===
+    // 庫爾札斯西部高地
+    2200: [
+        { name: "隼巢", coords: { x: 32.0, y: 36.7 } }
+    ],
+    // 德拉瓦尼亞山麓地
+    2000: [
+        { name: "尾羽部落", coords: { x: 33.2, y: 23.1 } },
+        { name: "不潔三塔", coords: { x: 16.5, y: 23.2 } }
+    ],
+    // 德拉瓦尼亞雲海
+    2002: [
+        { name: "天極白堊宮", coords: { x: 10.8, y: 28.8 } },
+        { name: "莫古利之家", coords: { x: 27.9, y: 34.3 } }
+    ],
+    // 魔大陸阿濟茲拉
+    2100: [
+        { name: "尊杜部落", coords: { x: 10.5, y: 14.2 } },
+        { name: "雲頂營地", coords: { x: 10.3, y: 33.6 } }
+    ]
+};
+
+// 計算兩點距離
+function calculateDistance(p1, p2) {
+    return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+}
+
+// 找出最近的傳送點
+function findNearestAetheryte(zoneId, coords) {
+    const aetherytes = ZONE_AETHERYTES[zoneId];
+    if (!aetherytes || aetherytes.length === 0) return null;
+
+    let nearest = aetherytes[0];
+    let minDist = calculateDistance(coords, nearest.coords);
+
+    for (let i = 1; i < aetherytes.length; i++) {
+        const dist = calculateDistance(coords, aetherytes[i].coords);
+        if (dist < minDist) {
+            minDist = dist;
+            nearest = aetherytes[i];
+        }
+    }
+
+    return { ...nearest, distance: minDist };
+}
+
 // 輔助函數：獲取地圖名稱
 function getMapName(mapId) {
     const map = MAP_DATA[mapId];

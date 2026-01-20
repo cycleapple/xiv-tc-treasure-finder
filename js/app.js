@@ -164,6 +164,10 @@ function renderTreasures() {
 
         const partySize = treasure.partySize || selectedGrade.partySize;
 
+        // 找出最近的傳送點
+        const zoneId = MAP_DATA[treasure.map]?.placename_id;
+        const nearestAetheryte = zoneId ? findNearestAetheryte(zoneId, treasure.coords) : null;
+
         card.innerHTML = `
             <div class="map-background-container">
                 <img class="map-background"
@@ -179,13 +183,18 @@ function renderTreasures() {
             <div class="position shadow-text">
                 X: ${treasure.coords.x.toFixed(1)} Y: ${treasure.coords.y.toFixed(1)}
             </div>
+            ${nearestAetheryte ? `
+            <div class="nearest-aetheryte shadow-text" title="最近傳送水晶">
+                <span class="aetheryte-icon">⬡</span> ${nearestAetheryte.name}
+            </div>
+            ` : ''}
             <div class="player-count">
                 <div class="player-icon">
                     <img src="assets/icons/treasuremap_player.png" alt="玩家">
                 </div>
                 <span class="party-size shadow-text">${partySize}</span>
             </div>
-            <button class="copy-pos-btn" data-pos="/pos ${treasure.coords.x.toFixed(1)} ${treasure.coords.y.toFixed(1)}" title="複製座標指令">
+            <button class="copy-pos-btn" data-pos="&lt;pos&gt; ${treasure.coords.x.toFixed(1)} ${treasure.coords.y.toFixed(1)}" title="複製座標指令">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
                 </svg>
@@ -954,6 +963,10 @@ function updateRouteListUI() {
         const isActive = selectedRouteItem === firebaseKey;
         const isCompleted = treasure.completed;
 
+        // 取得最近傳送點
+        const zoneId = MAP_DATA[treasure.mapId]?.placename_id;
+        const nearestAetheryte = zoneId ? findNearestAetheryte(zoneId, treasure.coords) : null;
+
         return `
             <div class="route-item ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}"
                  data-firebase-key="${firebaseKey}"
@@ -965,6 +978,7 @@ function updateRouteListUI() {
                     <div class="route-item-map">${escapeHtml(mapName)}</div>
                     <div class="route-item-details">
                         <span class="route-item-coords">X: ${treasure.coords.x.toFixed(1)} Y: ${treasure.coords.y.toFixed(1)}</span>
+                        ${nearestAetheryte ? `<span class="route-item-aetheryte" title="最近傳送水晶"><span class="aetheryte-icon">⬡</span> ${escapeHtml(nearestAetheryte.name)}</span>` : ''}
                         <span class="route-item-adder">${escapeHtml(treasure.addedByNickname || '未知')}</span>
                     </div>
                 </div>
@@ -978,7 +992,7 @@ function updateRouteListUI() {
                             <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
                         </svg>
                     </button>
-                    <button onclick="event.stopPropagation(); copyTreasureCoords('${treasure.coords.x.toFixed(1)}', '${treasure.coords.y.toFixed(1)}')" title="複製座標">
+                    <button class="btn-copy-coords-party" onclick="event.stopPropagation(); copyTreasureCoords('${treasure.coords.x.toFixed(1)}', '${treasure.coords.y.toFixed(1)}')" title="複製座標">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
                         </svg>
@@ -1115,7 +1129,7 @@ async function toggleRouteComplete(firebaseKey) {
 
 // 複製藏寶圖座標
 function copyTreasureCoords(x, y) {
-    const posCmd = `/pos ${x} ${y}`;
+    const posCmd = `<pos> ${x} ${y}`;
     navigator.clipboard.writeText(posCmd).then(() => {
         // 可以加個提示
         console.log('已複製座標:', posCmd);
@@ -1303,7 +1317,7 @@ function showGatheringNodes(itemId, gradeName, mapName) {
 // 渲染單個節點卡片 - 使用 zoneId 參照 PLACE_NAMES
 function renderNodeCard(node) {
     const zoneName = PLACE_NAMES[node.zoneId] || `地點 ${node.zoneId}`;
-    const posCmd = `/pos ${node.coords.x} ${node.coords.y}`;
+    const posCmd = `<pos> ${node.coords.x} ${node.coords.y}`;
     return `
         <div class="gathering-node-card">
             <div class="node-type">${node.nodeType}</div>

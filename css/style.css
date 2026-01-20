@@ -1534,6 +1534,14 @@ footer a:hover {
     font-family: 'Consolas', 'Monaco', monospace;
 }
 
+.route-item-aetheryte {
+    color: #e2e8f0;
+}
+
+.route-item-aetheryte .aetheryte-icon {
+    color: #38bdf8;
+}
+
 .route-item-actions {
     display: flex;
     gap: 6px;
@@ -1891,4 +1899,36 @@ footer a:hover {
     .btn-copy-coords {
         width: 100%;
     }
+}
+
+/* ============================================
+   最近傳送點樣式
+   ============================================ */
+
+.nearest-aetheryte {
+    position: absolute;
+    z-index: 5;
+    top: 32px;
+    right: 16px;
+    font-size: 0.7rem;
+    color: #e2e8f0;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 2px 6px;
+    border-radius: 3px;
+    cursor: default;
+}
+
+.nearest-aetheryte:hover {
+    color: #7dd3fc;
+}
+
+.aetheryte-icon {
+    color: #38bdf8;
+}
+
+/* 暫時隱藏複製座標按鈕 */
+.copy-pos-btn,
+.btn-copy-coords,
+.btn-copy-coords-party {
+    display: none !important;
 }
