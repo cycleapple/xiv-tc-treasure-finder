@@ -1962,9 +1962,8 @@ footer a:hover {
     color: #38bdf8;
 }
 
-/* 暫時隱藏複製座標按鈕 */
+/* 暫時隱藏複製座標按鈕 (保留組隊模式的) */
 .copy-pos-btn,
-.btn-copy-coords,
-.btn-copy-coords-party {
+.btn-copy-coords {
     display: none !important;
 }
