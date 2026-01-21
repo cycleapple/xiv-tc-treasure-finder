@@ -227,19 +227,15 @@ function renderTreasures() {
 
 // 計算 Teamcraft 風格的地圖偏移量 (像素)
 // 讓目標藏寶點位於卡片中央
+// 公式來源: https://github.com/xivapi/ffxiv-datamining/blob/master/docs/MapCoordinates.md
 function calcTeamcraftOffset(coords, mapId) {
     const map = MAP_DATA[mapId];
     const sizeFactor = map?.size_factor || 100;
-    const scale = sizeFactor / 100;
 
-    // 遊戲座標轉換為百分比位置 (0-1)
-    // FFXIV 地圖座標範圍是 1 到 (41*scale + 1)
-    const posX = (coords.x - 1) / (41 * scale);
-    const posY = (coords.y - 1) / (41 * scale);
-
-    // 轉換為 2048x2048 地圖上的像素位置
-    const pixelX = posX * 2048;
-    const pixelY = posY * 2048;
+    // 遊戲座標轉換為 2048x2048 地圖上的像素位置
+    // pixels = (gameCoord - 1) * sizeFactor / 2
+    const pixelX = (coords.x - 1) * sizeFactor / 2;
+    const pixelY = (coords.y - 1) * sizeFactor / 2;
 
     // 容器中央位置 (218*0.9/2 和 189*0.9/2)
     const centerX = 218 * 0.9 / 2;  // 98.1
@@ -253,12 +249,14 @@ function calcTeamcraftOffset(coords, mapId) {
 }
 
 // 遊戲座標轉換為地圖百分比位置
+// 公式來源: https://github.com/xivapi/ffxiv-datamining/blob/master/docs/MapCoordinates.md
+// pixels = (gameCoord - 1) * sizeFactor / 2
+// percent = pixels / 2048 * 100 = (gameCoord - 1) * sizeFactor / 40.96
 function coordsToPercent(coords, mapId) {
     const map = MAP_DATA[mapId];
     const sizeFactor = map?.size_factor || 100;
-    const scale = sizeFactor / 100;
-    const x = ((coords.x - 1) / (41 * scale)) * 100;
-    const y = ((coords.y - 1) / (41 * scale)) * 100;
+    const x = (coords.x - 1) * sizeFactor / 40.96;
+    const y = (coords.y - 1) * sizeFactor / 40.96;
     return { x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) };
 }
 
