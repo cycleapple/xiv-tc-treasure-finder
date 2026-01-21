@@ -619,6 +619,12 @@ function bindPartyEvents() {
         btnClearCompleted.addEventListener('click', clearCompletedTreasures);
     }
 
+    // 自動優化路線
+    const btnAutoOptimize = document.getElementById('btn-auto-optimize');
+    if (btnAutoOptimize) {
+        btnAutoOptimize.addEventListener('click', autoOptimizeRoute);
+    }
+
     // 地圖選擇
     const previewMapSelect = document.getElementById('preview-map-select');
     if (previewMapSelect) {
@@ -1150,6 +1156,45 @@ async function clearCompletedTreasures() {
         await PartyService.clearCompletedTreasures();
     } catch (error) {
         alert('清除失敗: ' + error.message);
+    }
+}
+
+// 自動優化路線
+async function autoOptimizeRoute() {
+    if (partyTreasures.length <= 1) {
+        alert('需要至少 2 個藏寶點才能優化路線');
+        return;
+    }
+
+    const btn = document.getElementById('btn-auto-optimize');
+    if (btn) btn.disabled = true;
+
+    try {
+        // 優化前分析
+        const beforeStats = RouteOptimizer.analyzeRoute(
+            [...partyTreasures].sort((a, b) => (a.order || 0) - (b.order || 0))
+        );
+
+        await PartyService.autoOptimizeRoute({ useMapGrouping: true });
+
+        // 優化後分析 (需等待同步更新)
+        setTimeout(() => {
+            const afterStats = RouteOptimizer.analyzeRoute(
+                [...partyTreasures].sort((a, b) => (a.order || 0) - (b.order || 0))
+            );
+
+            const improvement = beforeStats.totalDistance > 0
+                ? Math.round((1 - afterStats.totalDistance / beforeStats.totalDistance) * 100)
+                : 0;
+
+            console.log(`路線優化完成: 距離減少 ${improvement}%, 跨圖次數: ${afterStats.mapJumps}`);
+        }, 500);
+
+    } catch (error) {
+        alert('優化失敗: ' + error.message);
+        console.error('路線優化錯誤:', error);
+    } finally {
+        if (btn) btn.disabled = false;
     }
 }
 

@@ -1339,6 +1339,42 @@ footer a:hover {
     color: white;
 }
 
+.btn-icon:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-icon:disabled:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+.btn-text {
+    background: var(--bg-tertiary);
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.btn-text:hover {
+    background: var(--success);
+    color: white;
+}
+
+.btn-text:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-text:disabled:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
 /* 成員列 */
 .party-members-bar {
     display: flex;

@@ -124,6 +124,7 @@
                     <div class="route-list-header">
                         <h3>藏寶圖路線 (<span id="route-count">0</span>)</h3>
                         <div class="route-actions">
+                            <button class="btn-text" id="btn-auto-optimize">自動優化路線</button>
                             <button class="btn-icon" id="btn-clear-completed" title="清除已完成">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
@@ -212,7 +213,7 @@
                 <p>🛠️ 更多工具：<a href="https://cycleapple.github.io/xiv-tc-toolbox/" target="_blank">FFXIV 繁中工具箱</a></p>
             </div>
             <div class="footer-credits">
-                <p>資料來源：<a href="https://ffxivteamcraft.com" target="_blank">FFXIV Teamcraft</a></p>
+                <p>資料來源：<a href="https://ffxivteamcraft.com" target="_blank">FFXIV Teamcraft</a> | <a href="https://xivapi.com" target="_blank">XIVAPI</a></p>
                 <p><a href="https://github.com/cycleapple/xiv-tc-treasure-finder" target="_blank">GitHub</a></p>
             </div>
             <p class="copyright">© 2024 cycleapple | FINAL FANTASY XIV © SQUARE ENIX</p>
@@ -343,6 +344,7 @@
     </div>
 
     <script src="js/data.js"></script>
+    <script src="js/route-optimizer.js"></script>
     <script src="js/party/firebase-config.js"></script>
     <script src="js/party/auth-service.js"></script>
     <script src="js/party/party-service.js"></script>
