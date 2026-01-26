@@ -1328,9 +1328,18 @@ function updateMapPreviewUI() {
                 座標: X: ${treasure.coords.x.toFixed(1)} Y: ${treasure.coords.y.toFixed(1)}<br>
                 新增者: ${escapeHtml(treasure.addedByNickname || '未知')}
             `;
+            // 更新放大預覽
+            updateTreasureZoomPreview(treasure);
+        } else {
+            // 隱藏放大預覽
+            const zoomPreview = document.getElementById('treasure-zoom-preview');
+            if (zoomPreview) zoomPreview.classList.add('hidden');
         }
     } else {
         previewInfo.innerHTML = '<p>選擇藏寶圖查看詳情</p>';
+        // 隱藏放大預覽
+        const zoomPreview = document.getElementById('treasure-zoom-preview');
+        if (zoomPreview) zoomPreview.classList.add('hidden');
     }
 }
 
@@ -1348,7 +1357,85 @@ function selectRouteItem(firebaseKey) {
             mapSelect.value = treasure.mapId;
             updateMapPreviewUI();
         }
+
+        // 更新放大預覽
+        updateTreasureZoomPreview(treasure);
     }
+}
+
+// 更新藏寶點放大預覽
+function updateTreasureZoomPreview(treasure) {
+    const zoomPreview = document.getElementById('treasure-zoom-preview');
+    const zoomMapBg = document.getElementById('zoom-map-background');
+    const zoomCardNumber = document.getElementById('zoom-card-number');
+    const zoomPosition = document.getElementById('zoom-position');
+    const zoomAetheryte = document.getElementById('zoom-aetheryte');
+    const zoomAetheryteName = document.getElementById('zoom-aetheryte-name');
+
+    if (!zoomPreview || !treasure) {
+        if (zoomPreview) zoomPreview.classList.add('hidden');
+        return;
+    }
+
+    // 顯示放大預覽
+    zoomPreview.classList.remove('hidden');
+
+    // 設定地圖背景
+    const map = MAP_DATA[treasure.mapId];
+    if (map && zoomMapBg) {
+        zoomMapBg.src = map.image;
+
+        // 計算放大圖的偏移 (使用更大的容器尺寸)
+        const zoomOffset = calcZoomOffset(treasure.coords, treasure.mapId);
+        zoomMapBg.style.left = `${zoomOffset.x}px`;
+        zoomMapBg.style.top = `${zoomOffset.y}px`;
+    }
+
+    // 取得在排序後的順序編號
+    const sortedTreasures = [...partyTreasures].sort((a, b) => (a.order || 0) - (b.order || 0));
+    const globalIndex = sortedTreasures.findIndex(t => t.firebaseKey === treasure.firebaseKey) + 1;
+
+    // 更新編號
+    if (zoomCardNumber) {
+        zoomCardNumber.textContent = globalIndex;
+    }
+
+    // 更新座標
+    if (zoomPosition) {
+        zoomPosition.textContent = `X: ${treasure.coords.x.toFixed(1)} Y: ${treasure.coords.y.toFixed(1)}`;
+    }
+
+    // 更新傳送點
+    const zoneId = map?.placename_id;
+    const nearestAetheryte = zoneId ? findNearestAetheryte(zoneId, treasure.coords) : null;
+    if (zoomAetheryte && zoomAetheryteName) {
+        if (nearestAetheryte) {
+            zoomAetheryteName.textContent = nearestAetheryte.name;
+            zoomAetheryte.classList.remove('hidden');
+        } else {
+            zoomAetheryte.classList.add('hidden');
+        }
+    }
+}
+
+// 計算放大圖的地圖偏移量 (較大的容器)
+function calcZoomOffset(coords, mapId) {
+    const map = MAP_DATA[mapId];
+    const sizeFactor = map?.size_factor || 100;
+
+    // 遊戲座標轉換為 2048x2048 地圖上的像素位置
+    const pixelX = (coords.x - 1) * sizeFactor / 2;
+    const pixelY = (coords.y - 1) * sizeFactor / 2;
+
+    // 放大圖容器中央位置 (320*0.9/2 和 277*0.9/2)
+    const centerX = 320 * 0.9 / 2;  // 144
+    const centerY = 277 * 0.9 / 2;  // 124.65
+
+    // 計算偏移：讓 pixelX 位置出現在容器中央
+    const displayX = centerX - pixelX;
+    const displayY = centerY - pixelY;
+
+    return { x: displayX, y: displayY };
 }
 
 // 移動路線項目 (使用 firebaseKey)

@@ -158,6 +158,26 @@
                     <div class="map-preview-info" id="preview-info">
                         <p>選擇藏寶圖查看詳情</p>
                     </div>
+                    <!-- 藏寶點放大預覽 -->
+                    <div class="treasure-zoom-preview hidden" id="treasure-zoom-preview">
+                        <div class="treasure-zoom-header">
+                            <span class="treasure-zoom-title">藏寶點放大圖</span>
+                        </div>
+                        <div class="treasure-zoom-card">
+                            <div class="zoom-map-background-container">
+                                <img id="zoom-map-background" class="zoom-map-background" alt="地圖">
+                            </div>
+                            <div class="zoom-map-foreground"></div>
+                            <div class="zoom-treasure-marker-icon">
+                                <img src="assets/icons/treasure_marker.png" alt="標記">
+                            </div>
+                            <div class="zoom-card-number shadow-text" id="zoom-card-number">1</div>
+                            <div class="zoom-position shadow-text" id="zoom-position">X: 0.0 Y: 0.0</div>
+                            <div class="zoom-aetheryte shadow-text hidden" id="zoom-aetheryte">
+                                <span class="aetheryte-icon">⬡</span> <span id="zoom-aetheryte-name"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

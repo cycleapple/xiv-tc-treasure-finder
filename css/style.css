@@ -1815,6 +1815,144 @@ footer a:hover {
     text-align: center;
 }
 
+/* ============================================
+   藏寶點放大預覽 (隊伍模式)
+   ============================================ */
+.treasure-zoom-preview {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+}
+
+.treasure-zoom-header {
+    margin-bottom: 10px;
+}
+
+.treasure-zoom-title {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.treasure-zoom-card {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    height: 277px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 0 0 0 3px var(--accent-gold), var(--shadow-lg);
+}
+
+/* 放大圖地圖背景容器 */
+.zoom-map-background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    height: 90%;
+    width: 90%;
+    transform: translateX(5%) translateY(5%);
+    border-radius: 3px;
+}
+
+/* 放大圖地圖背景 */
+.zoom-map-background {
+    position: absolute;
+    width: 2048px;
+    height: 2048px;
+}
+
+/* 放大圖前景框架 */
+.zoom-map-foreground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    background-image: url('../assets/icons/treasure_map.png');
+    background-size: 100% 100%;
+    pointer-events: none;
+}
+
+/* 放大圖藏寶點標記 */
+.zoom-treasure-marker-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    z-index: 3;
+    width: 36px;
+    height: 36px;
+    animation: zoom-pulse 1.5s infinite;
+}
+
+.zoom-treasure-marker-icon img {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.8));
+}
+
+@keyframes zoom-pulse {
+    0%, 100% {
+        transform: translateX(-50%) translateY(-50%) scale(1);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-50%) scale(1.15);
+    }
+}
+
+/* 放大圖編號 */
+.zoom-card-number {
+    position: absolute;
+    z-index: 5;
+    top: 12px;
+    left: 18px;
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+}
+
+/* 放大圖座標 */
+.zoom-position {
+    position: absolute;
+    z-index: 5;
+    top: 16px;
+    right: 22px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+}
+
+/* 放大圖傳送點 */
+.zoom-aetheryte {
+    position: absolute;
+    z-index: 5;
+    top: 44px;
+    right: 22px;
+    font-size: 0.85rem;
+    color: #e2e8f0;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 3px 8px;
+    border-radius: 3px;
+}
+
+/* 響應式 - 放大圖 */
+@media (max-width: 900px) {
+    .treasure-zoom-card {
+        max-width: 280px;
+        height: 243px;
+    }
+
+    .zoom-card-number {
+        font-size: 28px;
+    }
+
+    .zoom-position {
+        font-size: 16px;
+    }
+}
+
 /* 響應式 - 隊伍模式 */
 @media (max-width: 900px) {
     .party-mode-content {
