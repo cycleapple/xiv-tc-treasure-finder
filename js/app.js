@@ -1706,11 +1706,21 @@ function showGatheringNodes(gatheringLevel, gradeName, mapName) {
     openModal('modal-gathering-nodes');
 }
 
-// 渲染單個節點卡片 - 使用 gatheringType 和 GATHERING_TYPE_INFO
+// 渲染單個節點卡片 - 原本的純文字樣式，加上地圖按鈕
 function renderNodeCard(node, level) {
     const zoneName = PLACE_NAMES[node.zoneId] || `地點 ${node.zoneId}`;
     const typeInfo = GATHERING_TYPE_INFO[node.gatheringType];
-    const posCmd = `/pos ${node.coords.x.toFixed(1)} ${node.coords.y.toFixed(1)}`;
+    const mapId = getMapIdByZoneId(node.zoneId);
+
+    // 地圖按鈕 (只有在有對應地圖時才顯示)
+    const mapButton = mapId ? `
+        <button class="btn-show-map" onclick="showGatheringNodeMapModal(${JSON.stringify(node).replace(/"/g, '&quot;')}, ${mapId})" title="顯示地圖">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/>
+            </svg>
+            地圖
+        </button>
+    ` : '';
 
     return `
         <div class="gathering-node-card">
@@ -1718,22 +1728,65 @@ function renderNodeCard(node, level) {
             <div class="node-location">${zoneName}</div>
             <div class="node-details">
                 <span class="node-coords">(${node.coords.x.toFixed(1)}, ${node.coords.y.toFixed(1)})</span>
-                <button class="btn-copy-coords" onclick="copyNodeCoords('${posCmd}', this)">複製</button>
+                ${mapButton}
             </div>
         </div>
     `;
 }
 
-// 複製節點座標
-function copyNodeCoords(posCmd, btn) {
-    navigator.clipboard.writeText(posCmd).then(() => {
-        btn.textContent = '已複製';
-        btn.classList.add('copied');
-        setTimeout(() => {
-            btn.textContent = '複製';
-            btn.classList.remove('copied');
-        }, 1500);
-    });
+// 採集點圖示 (來自 XIVAPI - Teamcraft 使用的圖示)
+// 按 gatheringType 對應: 0=礦脈, 1=石場, 2=良材, 3=草叢
+const GATHERING_NODE_ICONS = [
+    'https://xivapi.com/i/060000/060438.png',  // 0: 礦脈 (Mining)
+    'https://xivapi.com/i/060000/060437.png',  // 1: 石場 (Quarrying)
+    'https://xivapi.com/i/060000/060433.png',  // 2: 良材 (Logging)
+    'https://xivapi.com/i/060000/060432.png'   // 3: 草叢 (Harvesting)
+];
+
+// 顯示採集點大地圖 Modal
+function showGatheringNodeMapModal(node, mapId) {
+    const map = MAP_DATA[mapId];
+    if (!map) return;
+
+    const zoneName = PLACE_NAMES[node.zoneId] || `地點 ${node.zoneId}`;
+    const typeInfo = GATHERING_TYPE_INFO[node.gatheringType];
+
+    // 更新標題
+    document.getElementById('gathering-map-title').textContent = `${zoneName} - ${typeInfo.nodeType}`;
+
+    // 設定地圖圖片
+    const mapImage = document.getElementById('gathering-map-image');
+    mapImage.src = map.image;
+
+    // 計算標記位置 (百分比)
+    const sizeFactor = map.size_factor || 100;
+    const posX = (node.coords.x - 1) * sizeFactor / 40.96;
+    const posY = (node.coords.y - 1) * sizeFactor / 40.96;
+
+    // 設定標記位置和圖示
+    const marker = document.getElementById('gathering-map-marker');
+    marker.style.left = `${posX}%`;
+    marker.style.top = `${posY}%`;
+
+    // 使用 XIVAPI 圖示 (Teamcraft 風格)
+    const iconUrl = GATHERING_NODE_ICONS[node.gatheringType] || GATHERING_NODE_ICONS[0];
+    marker.innerHTML = `<img src="${iconUrl}" alt="${typeInfo.nodeType}" class="gathering-marker-icon">`;
+
+    // 設定範圍指示器位置
+    const range = document.getElementById('gathering-map-range');
+    range.style.left = `${posX}%`;
+    range.style.top = `${posY}%`;
+
+    // 更新資訊區
+    const infoEl = document.getElementById('gathering-map-info');
+    infoEl.innerHTML = `
+        <div class="gathering-map-info-content">
+            <p><strong>類型：</strong>${typeInfo.nodeType}</p>
+            <p><strong>座標：</strong>X: ${node.coords.x.toFixed(1)}, Y: ${node.coords.y.toFixed(1)}</p>
+        </div>
+    `;
+
+    openModal('modal-gathering-map');
 }
 
 // 頁面載入時初始化

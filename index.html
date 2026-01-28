@@ -384,6 +384,24 @@
         </div>
     </div>
 
+    <!-- 採集點大地圖 Modal -->
+    <div class="modal-overlay" id="modal-gathering-map">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <h3 class="modal-title" id="gathering-map-title">採集點位置</h3>
+                <button class="modal-close" data-close-modal>&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="gathering-map-container">
+                    <img id="gathering-map-image" class="gathering-map-image" alt="地圖">
+                    <div id="gathering-map-marker" class="gathering-map-marker"></div>
+                    <div id="gathering-map-range" class="gathering-range-indicator"></div>
+                </div>
+                <div class="gathering-map-info" id="gathering-map-info"></div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/data.js"></script>
     <script src="js/route-optimizer.js"></script>
     <script src="js/party/firebase-config.js"></script>

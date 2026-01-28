@@ -2150,27 +2150,30 @@ footer a:hover {
     font-size: 0.9rem;
 }
 
-.btn-copy-coords {
+
+/* 地圖按鈕 */
+.btn-show-map {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     padding: 4px 10px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: var(--accent);
+    border: 1px solid var(--accent);
     border-radius: 4px;
-    color: var(--text-secondary);
+    color: white;
     cursor: pointer;
     font-size: 0.8rem;
     transition: all 0.2s;
 }
 
-.btn-copy-coords:hover {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
+.btn-show-map:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+    transform: scale(1.05);
 }
 
-.btn-copy-coords.copied {
-    background: var(--success);
-    color: white;
-    border-color: var(--success);
+.btn-show-map svg {
+    flex-shrink: 0;
 }
 
 /* 響應式 - 採集點 */
@@ -2184,10 +2187,6 @@ footer a:hover {
     .node-details {
         width: 100%;
         justify-content: space-between;
-    }
-
-    .gathering-node-card .btn-copy-coords {
-        flex-shrink: 0;
     }
 }
 
@@ -2221,7 +2220,88 @@ footer a:hover {
     display: none !important;
 }
 
-/* 採集點 Modal 中的複製按鈕保持顯示 */
-.gathering-node-card .btn-copy-coords {
-    display: inline-block !important;
+
+/* ============================================
+   採集點大地圖 Modal 樣式
+   ============================================ */
+
+.gathering-map-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    aspect-ratio: 1;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--bg-tertiary);
+}
+
+.gathering-map-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gathering-map-marker {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gathering-marker-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.gathering-range-indicator {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(92, 200, 220, 0.15);
+    border: 3px solid rgba(92, 200, 220, 0.6);
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    animation: pulse-range 2s ease-in-out infinite;
+}
+
+@keyframes pulse-range {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.08); opacity: 0.7; }
+}
+
+.gathering-map-info {
+    margin-top: 16px;
+    padding: 16px;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.gathering-map-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.gathering-map-info-content p {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.gathering-map-info-content strong {
+    color: var(--text-primary);
+}
+
+/* 響應式 - 採集點地圖 */
+@media (max-width: 600px) {
+    .gathering-map-container {
+        max-width: 100%;
+    }
 }

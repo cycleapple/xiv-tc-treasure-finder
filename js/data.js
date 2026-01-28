@@ -488,3 +488,13 @@ function getMapsForGrade(gradeInfo) {
 function getTreasuresForGradeAndMap(gradeInfo, mapId) {
     return TREASURES.filter(t => t.item === gradeInfo.itemId && t.map === mapId);
 }
+
+// 輔助函數：根據 zoneId (PlaceName ID) 取得對應的 mapId
+function getMapIdByZoneId(zoneId) {
+    for (const [mapId, map] of Object.entries(MAP_DATA)) {
+        if (map.placename_id === zoneId) {
+            return parseInt(mapId);
+        }
+    }
+    return null;
+}
