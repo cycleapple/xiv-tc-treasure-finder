@@ -412,7 +412,7 @@ async function handleInviteUrl(partyCode) {
             await PartyService.joinParty(partyCode, savedNickname);
             SyncService.startSync(partyCode);
             closeModal('modal-join-party');
-            updatePartyUI();
+            updatePartyButtonsUI(true);
         } catch (error) {
             console.error('透過邀請連結加入失敗:', error);
             alert('加入隊伍失敗: ' + error.message);
