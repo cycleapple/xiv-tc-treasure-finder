@@ -499,7 +499,6 @@ const PartyService = (function() {
         return loadPartyState() !== null;
     }
 
-    // 自動優化路線順序
     async function autoOptimizeRoute(options = {}) {
         const sdk = window.FirebaseSDK;
         if (!sdk) throw new Error('Firebase SDK 尚未載入');
@@ -514,11 +513,9 @@ const PartyService = (function() {
 
         const treasuresRef = getRef(`parties/${currentPartyCode}/treasures`);
 
-        // 使用 Transaction 確保並發安全
         await sdk.runTransaction(treasuresRef, (treasures) => {
             if (!treasures) return treasures;
 
-            // 轉換為陣列格式
             const treasureArray = Object.entries(treasures).map(([key, value]) => ({
                 ...value,
                 firebaseKey: key
@@ -526,13 +523,15 @@ const PartyService = (function() {
 
             if (treasureArray.length <= 1) return treasures;
 
-            // 使用 RouteOptimizer 優化
+            const sortedByOrder = [...treasureArray].sort((a, b) => (a.order || 0) - (b.order || 0));
+            const firstTreasure = sortedByOrder[0];
+
             const optimized = window.RouteOptimizer.optimize(treasureArray, {
                 useMapGrouping: options.useMapGrouping !== false,
-                use2Opt: options.use2Opt || false
+                use2Opt: options.use2Opt || false,
+                startTreasure: firstTreasure
             });
 
-            // 更新 order 欄位
             optimized.forEach((treasure, index) => {
                 if (treasures[treasure.firebaseKey]) {
                     treasures[treasure.firebaseKey].order = index + 1;

@@ -209,7 +209,7 @@ function renderTreasures() {
                 </div>
                 <span class="party-size shadow-text">${partySize}</span>
             </div>
-            <button class="copy-pos-btn" data-pos="&lt;pos&gt; ${treasure.coords.x.toFixed(1)} ${treasure.coords.y.toFixed(1)}" title="複製座標指令">
+            <button class="copy-pos-btn" data-pos="/coord ${treasure.coords.x.toFixed(1)} ${treasure.coords.y.toFixed(1)}" title="複製座標指令">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
                 </svg>
@@ -368,19 +368,16 @@ async function initializePartySystem() {
     // Firebase 連線會在使用者建立/加入隊伍時才建立
     bindPartyEvents();
 
-    // 檢查 URL 是否有邀請代碼 (?party=XXXXXXXX)
     const urlParams = new URLSearchParams(window.location.search);
     const inviteCode = urlParams.get('party');
 
     if (inviteCode) {
-        // 有邀請連結，處理加入流程
         handleInviteUrl(inviteCode);
     } else if (PartyService.hasSavedPartyState()) {
-        // 檢查是否有已儲存的隊伍狀態 (用於重連)
-        showReconnectPrompt();
+        autoReconnectParty();
     }
 
-    console.log('隊伍系統就緒 (延遲連線模式)');
+    console.log('隊伍系統就緒');
 }
 
 // 處理邀請連結
@@ -541,7 +538,34 @@ function showReconnectPrompt() {
     }
 }
 
-// 處理重連
+async function autoReconnectParty() {
+    console.log('自動重連隊伍中...');
+    
+    try {
+        const connected = await ensureFirebaseConnected();
+        if (!connected) {
+            console.warn('自動重連失敗: 無法連接伺服器');
+            PartyService.clearPartyState();
+            return;
+        }
+
+        const partyCode = await PartyService.tryRejoinParty();
+
+        if (partyCode) {
+            SyncService.startSync(partyCode);
+            updatePartyButtonsUI(true);
+            document.getElementById('status-party-code').textContent = partyCode;
+            console.log('自動重連成功:', partyCode);
+        } else {
+            console.log('自動重連失敗: 隊伍已不存在');
+            PartyService.clearPartyState();
+        }
+    } catch (error) {
+        console.error('自動重連錯誤:', error);
+        PartyService.clearPartyState();
+    }
+}
+
 async function handleReconnect() {
     const reconnectBtn = document.getElementById('btn-reconnect-party');
     if (reconnectBtn) {
@@ -557,24 +581,20 @@ async function handleReconnect() {
     isReconnecting = true;
 
     try {
-        // 確保 Firebase 已連線
         const connected = await ensureFirebaseConnected();
         if (!connected) {
             throw new Error('無法連接伺服器');
         }
 
-        // 嘗試重新加入隊伍
         const partyCode = await PartyService.tryRejoinParty();
 
         if (partyCode) {
-            // 重連成功
             SyncService.startSync(partyCode);
             updatePartyButtonsUI(true);
             document.getElementById('status-party-code').textContent = partyCode;
             removeReconnectButtons();
             console.log('重連成功:', partyCode);
         } else {
-            // 重連失敗，隊伍可能已不存在
             cancelReconnect();
             alert('隊伍已不存在或已過期');
         }
@@ -1468,21 +1488,15 @@ async function toggleRouteComplete(firebaseKey) {
     }
 }
 
-// 複製藏寶圖座標
 function copyTreasureCoords(x, y) {
-    const posCmd = `<pos> ${x} ${y}`;
+    const posCmd = `/coord ${x} ${y}`;
     navigator.clipboard.writeText(posCmd).then(() => {
-        // 可以加個提示
         console.log('已複製座標:', posCmd);
     });
 }
 
-// 複製組隊模式座標 (含地圖名稱和傳送點)
 function copyPartyCoords(btn, mapName, x, y, aetheryteName) {
-    let text = `/p [${mapName}]:(${x}, ${y})`;
-    if (aetheryteName) {
-        text += ` | 最近傳送水晶:[${aetheryteName}]`;
-    }
+    let text = `/coord ${x} ${y}`;
     navigator.clipboard.writeText(text).then(() => {
         btn.classList.add('copied');
         setTimeout(() => btn.classList.remove('copied'), 1500);

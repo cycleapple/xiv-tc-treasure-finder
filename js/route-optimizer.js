@@ -5,6 +5,44 @@
 const RouteOptimizer = (function() {
 
     /**
+     * 地圖區域分組 - 相近的地圖放在同一組
+     * 組內的地圖會優先排在一起
+     * 格式: { 區域名稱: [mapId1, mapId2, ...] }
+     */
+    const MAP_REGION_GROUPS = {
+        // 4.0 紅蓮 - 基拉巴尼亞區
+        'gyr_abania': [367, 368, 369],  // 基拉巴尼亞邊區、山區、湖區
+        // 4.0 紅蓮 - 東方區
+        'othard': [371, 354, 372],       // 紅玉海、延夏、太陽神草原
+        // 3.0 蒼天 - 伊修加德區
+        'ishgard': [211, 212, 213, 214, 215],  // 庫爾札斯西部高地、德拉瓦尼亞山麓地、河谷地、雲海、阿巴拉提亞雲海
+        // 5.0 暗影 - 諾弗蘭特區
+        'norvrandt': [491, 492, 493, 494, 495, 496],  // 雷克蘭德、珂露西亞島、安穆艾蘭、伊爾美格、拉凱提卡大森林、黑風海
+        // 6.0 曉月 - 北洲區
+        'ew_north': [695, 696],          // 迷津、薩維奈島
+        // 6.0 曉月 - 終局區
+        'ew_endgame': [698, 699, 700],   // 嘆息海、天外天垓、厄爾庇斯
+        // 7.0 黃金 - 新世界區
+        'dt_tural': [857, 858, 859],     // 奧闊帕恰山、克扎瑪烏卡濕地、亞克特爾樹海
+        // 7.0 黃金 - 遺產區
+        'dt_solution': [860, 861, 862]   // 夏勞尼荒野、遺產之地、憶想之地
+    };
+
+    /**
+     * 取得地圖所屬的區域
+     * @param {number} mapId - 地圖 ID
+     * @returns {string|null} 區域名稱，若無則返回 null
+     */
+    function getMapRegion(mapId) {
+        for (const [region, mapIds] of Object.entries(MAP_REGION_GROUPS)) {
+            if (mapIds.includes(mapId)) {
+                return region;
+            }
+        }
+        return null;
+    }
+
+    /**
      * 計算兩點間的歐幾里得距離
      */
     function calcDistance(p1, p2) {
@@ -86,44 +124,70 @@ const RouteOptimizer = (function() {
         return result;
     }
 
-    /**
-     * 地圖間排序 - 按藏寶點數量和位置
-     * @param {Object} mapGroups - 按地圖分組的藏寶點
-     * @returns {Array} 排序後的地圖ID陣列
-     */
-    function sortMaps(mapGroups) {
+    function sortMaps(mapGroups, startMapId = null) {
         const mapIds = Object.keys(mapGroups).map(Number);
         if (mapIds.length <= 1) return mapIds;
 
-        const result = [];
-        const remaining = new Set(mapIds);
+        const regionGroups = {};
+        const ungroupedMaps = [];
 
-        // 從藏寶點最多的地圖開始
-        let currentMapId = mapIds.reduce((maxId, id) =>
-            mapGroups[id].length > mapGroups[maxId].length ? id : maxId
-        , mapIds[0]);
-
-        while (remaining.size > 0) {
-            result.push(currentMapId);
-            remaining.delete(currentMapId);
-
-            if (remaining.size === 0) break;
-
-            // 找下一個最近的地圖 (用中心點距離)
-            const currentCenter = calcCenter(mapGroups[currentMapId]);
-            let nearestMapId = null;
-            let minDist = Infinity;
-
-            for (const mapId of remaining) {
-                const center = calcCenter(mapGroups[mapId]);
-                const dist = calcDistance(currentCenter, center);
-                if (dist < minDist) {
-                    minDist = dist;
-                    nearestMapId = mapId;
-                }
+        for (const mapId of mapIds) {
+            const region = getMapRegion(mapId);
+            if (region) {
+                if (!regionGroups[region]) regionGroups[region] = [];
+                regionGroups[region].push(mapId);
+            } else {
+                ungroupedMaps.push(mapId);
             }
+        }
 
-            currentMapId = nearestMapId;
+        const startRegion = startMapId ? getMapRegion(startMapId) : null;
+
+        const regionTreasureCounts = {};
+        for (const [region, regionMapIds] of Object.entries(regionGroups)) {
+            regionTreasureCounts[region] = regionMapIds.reduce(
+                (sum, id) => sum + mapGroups[id].length, 0
+            );
+        }
+
+        const sortedRegions = Object.keys(regionGroups).sort((a, b) => {
+            if (startRegion) {
+                if (a === startRegion) return -1;
+                if (b === startRegion) return 1;
+            }
+            return regionTreasureCounts[b] - regionTreasureCounts[a];
+        });
+
+        for (const region of sortedRegions) {
+            regionGroups[region].sort((a, b) => {
+                if (startMapId && region === startRegion) {
+                    if (a === startMapId) return -1;
+                    if (b === startMapId) return 1;
+                }
+                return mapGroups[b].length - mapGroups[a].length;
+            });
+        }
+
+        ungroupedMaps.sort((a, b) => {
+            if (startMapId && !startRegion) {
+                if (a === startMapId) return -1;
+                if (b === startMapId) return 1;
+            }
+            return mapGroups[b].length - mapGroups[a].length;
+        });
+
+        const result = [];
+
+        if (startMapId && !startRegion && ungroupedMaps.includes(startMapId)) {
+            result.push(...ungroupedMaps);
+            for (const region of sortedRegions) {
+                result.push(...regionGroups[region]);
+            }
+        } else {
+            for (const region of sortedRegions) {
+                result.push(...regionGroups[region]);
+            }
+            result.push(...ungroupedMaps);
         }
 
         return result;
@@ -182,18 +246,11 @@ const RouteOptimizer = (function() {
         return total;
     }
 
-    /**
-     * 主優化函數
-     * @param {Array} treasures - 藏寶點陣列
-     * @param {Object} options - 選項
-     * @param {boolean} options.useMapGrouping - 是否按地圖分組 (預設 true)
-     * @param {boolean} options.use2Opt - 是否使用 2-opt 改進 (預設 false)
-     * @returns {Array} 優化後的藏寶點陣列
-     */
     function optimize(treasures, options = {}) {
         const {
             useMapGrouping = true,
-            use2Opt = false
+            use2Opt = false,
+            startTreasure = null
         } = options;
 
         if (!treasures || treasures.length <= 1) {
@@ -203,29 +260,26 @@ const RouteOptimizer = (function() {
         let result;
 
         if (useMapGrouping) {
-            // 按地圖分組優化
             const mapGroups = groupByMap(treasures);
-            const sortedMapIds = sortMaps(mapGroups);
+            const startMapId = startTreasure ? startTreasure.mapId : null;
+            const sortedMapIds = sortMaps(mapGroups, startMapId);
 
             result = [];
-            let lastCoords = null;
+            let lastCoords = startTreasure ? startTreasure.coords : null;
 
             for (const mapId of sortedMapIds) {
-                // 地圖內排序，考慮上一個地圖的結束位置
                 const sorted = sortWithinMap(mapGroups[mapId], lastCoords);
                 result.push(...sorted);
 
-                // 記錄這個地圖的最後位置
                 if (sorted.length > 0) {
                     lastCoords = sorted[sorted.length - 1].coords;
                 }
             }
         } else {
-            // 全局最近鄰居法
-            result = sortWithinMap(treasures);
+            const startCoords = startTreasure ? startTreasure.coords : null;
+            result = sortWithinMap(treasures, startCoords);
         }
 
-        // 可選：2-opt 改進
         if (use2Opt) {
             result = improve2Opt(result);
         }
