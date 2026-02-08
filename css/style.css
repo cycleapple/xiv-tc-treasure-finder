@@ -396,8 +396,8 @@ header h1 {
 /* 地圖背景圖片 */
 .map-background {
     position: absolute;
-    width: 2048px;
-    height: 2048px;
+    width: 1024px;
+    height: 1024px;
 }
 
 /* 藏寶圖前景框架 */
@@ -670,8 +670,8 @@ header h1 {
     }
 
     .map-background {
-        width: 2048px;
-        height: 2048px;
+        width: 1024px;
+        height: 1024px;
     }
 }
 
