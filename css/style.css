@@ -1683,6 +1683,32 @@ footer a:hover {
     color: #38bdf8;
 }
 
+.route-item-note {
+    margin-top: 4px;
+}
+
+.route-note-input {
+    width: 100%;
+    padding: 3px 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    transition: all 0.2s;
+}
+
+.route-note-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.route-note-input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
 .route-item-actions {
     display: flex;
     gap: 6px;

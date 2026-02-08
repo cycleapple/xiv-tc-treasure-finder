@@ -1213,6 +1213,13 @@ function updateRouteListUI() {
         return;
     }
 
+    // 記錄正在編輯中的備註 input 狀態
+    const activeNoteEl = routeItems.querySelector('.route-note-input:focus');
+    const editingNoteKey = activeNoteEl ? activeNoteEl.dataset.firebaseKey : null;
+    const editingNoteValue = activeNoteEl ? activeNoteEl.value : null;
+    const editingNoteSelStart = activeNoteEl ? activeNoteEl.selectionStart : null;
+    const editingNoteSelEnd = activeNoteEl ? activeNoteEl.selectionEnd : null;
+
     routeItems.innerHTML = sortedTreasures.map((treasure, index) => {
         const mapName = getMapName(treasure.mapId);
         const firebaseKey = treasure.firebaseKey;
@@ -1236,6 +1243,14 @@ function updateRouteListUI() {
                         <span class="route-item-coords">X: ${treasure.coords.x.toFixed(1)} Y: ${treasure.coords.y.toFixed(1)}</span>
                         ${nearestAetheryte ? `<span class="route-item-aetheryte" title="最近傳送水晶"><span class="aetheryte-icon">⬡</span> ${escapeHtml(nearestAetheryte.name)}</span>` : ''}
                         <span class="route-item-adder">${escapeHtml(treasure.addedByNickname || '未知')}</span>
+                    </div>
+                    <div class="route-item-note">
+                        <input type="text" class="route-note-input" placeholder="備註..."
+                            value="${escapeHtml(treasure.note || '')}"
+                            data-firebase-key="${firebaseKey}"
+                            onclick="event.stopPropagation()"
+                            onblur="updateTreasureNote(this)"
+                            onkeydown="if(event.key==='Enter'){this.blur()}" />
                     </div>
                 </div>
                 <div class="route-item-actions">
@@ -1262,6 +1277,16 @@ function updateRouteListUI() {
             </div>
         `;
     }).join('');
+
+    // 還原正在編輯中的備註 input 狀態
+    if (editingNoteKey) {
+        const input = routeItems.querySelector(`.route-note-input[data-firebase-key="${editingNoteKey}"]`);
+        if (input) {
+            input.value = editingNoteValue;
+            input.focus();
+            input.setSelectionRange(editingNoteSelStart, editingNoteSelEnd);
+        }
+    }
 }
 
 // 更新地圖預覽 UI
@@ -1458,6 +1483,17 @@ async function moveRouteItem(firebaseKey, direction) {
         await PartyService.swapTreasureOrder(current.firebaseKey, target.firebaseKey);
     } catch (error) {
         console.error('移動失敗:', error);
+    }
+}
+
+// 更新藏寶圖備註
+async function updateTreasureNote(inputElement) {
+    const firebaseKey = inputElement.dataset.firebaseKey;
+    const note = inputElement.value.trim();
+    try {
+        await PartyService.updateTreasureNote(firebaseKey, note);
+    } catch (error) {
+        console.error('更新備註失敗:', error);
     }
 }
 
