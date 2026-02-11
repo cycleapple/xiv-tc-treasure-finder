@@ -366,6 +366,19 @@ const PartyService = (function() {
         console.log(`藏寶圖 ${firebaseKey} 備註已更新`);
     }
 
+    // 更新藏寶圖玩家名稱 (使用 Firebase key)
+    async function updateTreasurePlayer(firebaseKey, player) {
+        const sdk = window.FirebaseSDK;
+        if (!sdk) throw new Error('Firebase SDK 尚未載入');
+
+        if (!currentPartyCode) {
+            throw new Error('尚未加入隊伍');
+        }
+
+        await sdk.set(getRef(`parties/${currentPartyCode}/treasures/${firebaseKey}/player`), player);
+        console.log(`藏寶圖 ${firebaseKey} 玩家已更新`);
+    }
+
     // 更新藏寶圖順序 (使用 Firebase key)
     async function updateTreasureOrder(firebaseKey, newOrder) {
         const sdk = window.FirebaseSDK;
@@ -568,6 +581,7 @@ const PartyService = (function() {
         removeTreasure,
         toggleTreasureComplete,
         updateTreasureNote,
+        updateTreasurePlayer,
         updateTreasureOrder,
         swapTreasureOrder,
         autoOptimizeRoute,

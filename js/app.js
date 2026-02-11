@@ -1220,6 +1220,13 @@ function updateRouteListUI() {
     const editingNoteSelStart = activeNoteEl ? activeNoteEl.selectionStart : null;
     const editingNoteSelEnd = activeNoteEl ? activeNoteEl.selectionEnd : null;
 
+    // 記錄正在編輯中的玩家 input 狀態
+    const activePlayerEl = routeItems.querySelector('.route-player-input:focus');
+    const editingPlayerKey = activePlayerEl ? activePlayerEl.dataset.firebaseKey : null;
+    const editingPlayerValue = activePlayerEl ? activePlayerEl.value : null;
+    const editingPlayerSelStart = activePlayerEl ? activePlayerEl.selectionStart : null;
+    const editingPlayerSelEnd = activePlayerEl ? activePlayerEl.selectionEnd : null;
+
     routeItems.innerHTML = sortedTreasures.map((treasure, index) => {
         const mapName = getMapName(treasure.mapId);
         const firebaseKey = treasure.firebaseKey;
@@ -1243,6 +1250,19 @@ function updateRouteListUI() {
                         <span class="route-item-coords">X: ${treasure.coords.x.toFixed(1)} Y: ${treasure.coords.y.toFixed(1)}</span>
                         ${nearestAetheryte ? `<span class="route-item-aetheryte" title="最近傳送水晶"><span class="aetheryte-icon">⬡</span> ${escapeHtml(nearestAetheryte.name)}</span>` : ''}
                         <span class="route-item-adder">${escapeHtml(treasure.addedByNickname || '未知')}</span>
+                    </div>
+                    <div class="route-item-player">
+                        <input type="text" class="route-player-input" placeholder="玩家名稱..."
+                            value="${escapeHtml(treasure.player || '')}"
+                            data-firebase-key="${firebaseKey}"
+                            onclick="event.stopPropagation()"
+                            onblur="updateTreasurePlayer(this)"
+                            onkeydown="if(event.key==='Enter'){this.blur()}" />
+                        <button class="btn-copy-player-msg" onclick="event.stopPropagation(); copyPlayerMessage(this, '${firebaseKey}')" title="複製玩家訊息">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                            </svg>
+                        </button>
                     </div>
                     <div class="route-item-note">
                         <input type="text" class="route-note-input" placeholder="備註..."
@@ -1285,6 +1305,16 @@ function updateRouteListUI() {
             input.value = editingNoteValue;
             input.focus();
             input.setSelectionRange(editingNoteSelStart, editingNoteSelEnd);
+        }
+    }
+
+    // 還原正在編輯中的玩家 input 狀態
+    if (editingPlayerKey) {
+        const input = routeItems.querySelector(`.route-player-input[data-firebase-key="${editingPlayerKey}"]`);
+        if (input) {
+            input.value = editingPlayerValue;
+            input.focus();
+            input.setSelectionRange(editingPlayerSelStart, editingPlayerSelEnd);
         }
     }
 }
@@ -1495,6 +1525,40 @@ async function updateTreasureNote(inputElement) {
     } catch (error) {
         console.error('更新備註失敗:', error);
     }
+}
+
+// 更新藏寶圖玩家名稱
+async function updateTreasurePlayer(inputElement) {
+    const firebaseKey = inputElement.dataset.firebaseKey;
+    const player = inputElement.value.trim();
+    try {
+        await PartyService.updateTreasurePlayer(firebaseKey, player);
+    } catch (error) {
+        console.error('更新玩家失敗:', error);
+    }
+}
+
+// 複製玩家訊息 (格式: /p 玩家名 [地圖]:(X, Y) | 最近傳送水晶:[水晶名])
+function copyPlayerMessage(btn, firebaseKey) {
+    const treasure = partyTreasures.find(t => t.firebaseKey === firebaseKey);
+    if (!treasure) return;
+
+    const playerName = treasure.player || '';
+    const mapName = getMapName(treasure.mapId);
+    const x = treasure.coords.x.toFixed(1);
+    const y = treasure.coords.y.toFixed(1);
+    const zoneId = MAP_DATA[treasure.mapId]?.placename_id;
+    const nearestAetheryte = zoneId ? findNearestAetheryte(zoneId, treasure.coords) : null;
+
+    let text = `/p ${playerName} [${mapName}]:(${x}, ${y})`;
+    if (nearestAetheryte) {
+        text += ` | 最近傳送水晶:[${nearestAetheryte.name}]`;
+    }
+
+    navigator.clipboard.writeText(text).then(() => {
+        btn.classList.add('copied');
+        setTimeout(() => btn.classList.remove('copied'), 1500);
+    });
 }
 
 // 切換完成狀態 (使用 firebaseKey)
