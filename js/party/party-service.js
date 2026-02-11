@@ -303,7 +303,8 @@ const PartyService = (function() {
             addedByNickname: memberNickname,
             addedAt: sdk.serverTimestamp(),
             order: maxOrder + 1,
-            completed: false
+            completed: false,
+            player: memberNickname || ''
         };
 
         // 使用 push 生成唯一 key，允許同一藏寶點被多次新增
