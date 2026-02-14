@@ -1536,7 +1536,7 @@ footer a:hover {
 }
 
 .route-items {
-    flex: 1;
+    max-height: 60vh;
     overflow-y: auto;
     padding: 12px;
     display: flex;
