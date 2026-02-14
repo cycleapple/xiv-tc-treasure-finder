@@ -247,12 +247,9 @@ function calcTeamcraftOffset(coords, mapId) {
     const map = MAP_DATA[mapId];
     const sizeFactor = map?.size_factor || 100;
 
-    // 縮放比例 (地圖從 2048 縮小至 1024，拉遠視野)
-    const scale = 0.5;
-
-    // 遊戲座標轉換為縮放後地圖上的像素位置
-    const pixelX = (coords.x - 1) * sizeFactor / 2 * scale;
-    const pixelY = (coords.y - 1) * sizeFactor / 2 * scale;
+    // 遊戲座標轉換為 2048x2048 地圖上的像素位置
+    const pixelX = (coords.x - 1) * sizeFactor / 2;
+    const pixelY = (coords.y - 1) * sizeFactor / 2;
 
     // 容器中央位置 (218*0.9/2 和 189*0.9/2)
     const centerX = 218 * 0.9 / 2;  // 98.1
