@@ -5,10 +5,10 @@ const GRADE_DATA = [
     { grade: "G17", itemId: 43557, name: "陳舊的獰豹革地圖", partySize: 8, expansion: "7.0", gatheringLevel: 100, gatheringZoneIds: [4508, 4509, 4507] },
     { grade: "G16", itemId: 43556, name: "陳舊的銀狼革地圖", partySize: 1, expansion: "7.0", gatheringLevel: 100, gatheringZoneIds: [4508, 4509, 4507] },
     { grade: "G15", itemId: 39591, name: "陳舊的蛇牛革地圖", partySize: 8, expansion: "6.3", gatheringLevel: 90, gatheringZoneIds: [3713] },
-    { grade: "G14", itemId: 36612, name: "陳舊的金毗羅鱷革地圖", partySize: 8, expansion: "6.0", gatheringLevel: 90, gatheringZoneIds: [3708, 3709, 3711, 3712] },
-    { grade: "G13", itemId: 36611, name: "陳舊的賽加羚羊革地圖", partySize: 1, expansion: "6.0", gatheringLevel: 90, gatheringZoneIds: [3708, 3709, 3711, 3712] },
-    { grade: "G12", itemId: 26745, name: "陳舊的纏尾蛟革地圖", partySize: 8, expansion: "5.0", gatheringLevel: 80, gatheringZoneIds: [2953, 2954, 2955, 2956, 2957, 2958] },
-    { grade: "G11", itemId: 26744, name: "陳舊的綠飄龍革地圖", partySize: 1, expansion: "5.0", gatheringLevel: 80, gatheringZoneIds: [2953, 2954, 2955, 2956, 2957, 2958] },
+    { grade: "G14", itemId: 36612, name: "陳舊的金毗羅鱷革地圖", partySize: 8, expansion: "6.0", gatheringLevel: 90, gatheringZoneIds: [3708] },
+    { grade: "G13", itemId: 36611, name: "陳舊的賽加羚羊革地圖", partySize: 1, expansion: "6.0", gatheringLevel: 90, gatheringZoneIds: [3708] },
+    { grade: "G12", itemId: 26745, name: "陳舊的纏尾蛟革地圖", partySize: 8, expansion: "5.0", gatheringLevel: 80, gatheringZoneIds: [2953, 2954, 2955, 2957] },
+    { grade: "G11", itemId: 26744, name: "陳舊的綠飄龍革地圖", partySize: 1, expansion: "5.0", gatheringLevel: 80, gatheringZoneIds: [2953, 2954, 2955, 2957] },
     { grade: "綠圖", itemId: 19770, name: "深層傳送魔紋的地圖", partySize: 8, expansion: "4.05", special: true, gatheringLevel: 70, gatheringZoneIds: [2406, 2407, 2408, 2409, 2410, 2411] },
     { grade: "G10", itemId: 17836, name: "陳舊的瞪羚革地圖", partySize: 8, expansion: "4.0", gatheringLevel: 70, gatheringZoneIds: [2406, 2407, 2408, 2409, 2410, 2411] },
     { grade: "G9", itemId: 17835, name: "陳舊的迦迦納怪鳥革地圖", partySize: 1, expansion: "4.0", gatheringLevel: 70, gatheringZoneIds: [2406, 2407, 2408, 2409, 2410, 2411] },
@@ -192,14 +192,20 @@ const GATHERING_NODES_BY_LEVEL = {
     // 區域: 夏勞尼荒野、遺產之地、亞克特爾樹海
     100: [
         // 採掘師 - 礦脈 (gatheringType: 0)
-        { gatheringType: 0, zoneId: 4508, coords: { x: 13, y: 9 } },     // 夏勞尼荒野 - Eshceyaani Wilds
-        { gatheringType: 0, zoneId: 4509, coords: { x: 29, y: 22 } },    // 遺產之地 - East Yyasulani
-        { gatheringType: 0, zoneId: 4509, coords: { x: 15, y: 23 } },    // 遺產之地 - Archeo Alexandria
+        { gatheringType: 0, zoneId: 4508, coords: { x: 13, y: 9 } },       // 夏勞尼荒野 - 艾休凱亞尼荒原
+        { gatheringType: 0, zoneId: 4509, coords: { x: 29, y: 22 } },      // 遺產之地 - 亞斯拉尼荒野東部
+        { gatheringType: 0, zoneId: 4509, coords: { x: 15, y: 23 } },      // 遺產之地 - 舊亞歷山德里亞
+        // 採掘師 - 石場 (gatheringType: 1)
+        { gatheringType: 1, zoneId: 4508, coords: { x: 17, y: 32 } },      // 夏勞尼荒野 - 艾休凱亞尼荒原
         // 園藝師 - 良材 (gatheringType: 2)
-        { gatheringType: 2, zoneId: 4508, coords: { x: 12, y: 22 } },    // 夏勞尼荒野 - Eshceyaani Wilds
-        { gatheringType: 2, zoneId: 4509, coords: { x: 32, y: 28 } },    // 遺產之地 - East Yyasulani
+        { gatheringType: 2, zoneId: 4508, coords: { x: 12, y: 22 } },      // 夏勞尼荒野 - 艾休凱亞尼荒原
+        { gatheringType: 2, zoneId: 4508, coords: { x: 28, y: 13 } },      // 夏勞尼荒野 - 帕利尤南沃野
+        { gatheringType: 2, zoneId: 4509, coords: { x: 32, y: 28 } },      // 遺產之地 - 亞斯拉尼荒野東部
         // 園藝師 - 草叢 (gatheringType: 3)
-        { gatheringType: 3, zoneId: 4508, coords: { x: 25.3, y: 34 } }   // 夏勞尼荒野 - Yawtanane Grasslands
+        { gatheringType: 3, zoneId: 4507, coords: { x: 27.8, y: 15.4 } },  // 亞克特爾樹海 - 白燼古戰場
+        { gatheringType: 3, zoneId: 4507, coords: { x: 29.1, y: 5.1 } },   // 亞克特爾樹海 - 赤血天坑
+        { gatheringType: 3, zoneId: 4508, coords: { x: 25.3, y: 34 } },    // 夏勞尼荒野 - 亞塔納內草地
+        { gatheringType: 3, zoneId: 4509, coords: { x: 11, y: 17 } }       // 遺產之地 - 永護塔週邊
     ],
 
     // Lv.90 - 曉月終焉 (6.0/6.3) - 來源: consolegameswiki
@@ -207,69 +213,69 @@ const GATHERING_NODES_BY_LEVEL = {
     // 6.3 區域: 厄爾庇斯
     90: [
         // 厄爾庇斯 G15 (6.3)
-        { gatheringType: 1, zoneId: 3713, coords: { x: 12.0, y: 18.4 } }, // 石場 - Rumination's Ramble
-        { gatheringType: 3, zoneId: 3713, coords: { x: 20.6, y: 24.9 } }, // 草叢 - Philomythes Notos
-        // 6.0 基礎區域 G13/G14 - 迷津 (Labyrinthos)
-        { gatheringType: 0, zoneId: 3708, coords: { x: 18.5, y: 12.3 } }, // 礦脈 - Hollow of the Flesh (Ostrakon Tria)
-        { gatheringType: 1, zoneId: 3708, coords: { x: 21.5, y: 33.4 } }, // 石場 - The Vitrified Fort (Ostrakon Deka-okto)
-        { gatheringType: 2, zoneId: 3708, coords: { x: 7.5, y: 21.6 } },  // 良材 - Ahm Nohl (Ostrakon Deka-okto)
-        { gatheringType: 3, zoneId: 3708, coords: { x: 14.2, y: 28.6 } }  // 草叢 - Reah Tahra (Ostrakon Deka-okto)
+        { gatheringType: 1, zoneId: 3713, coords: { x: 12.0, y: 18.4 } }, // 石場 - 逍遙水徑
+        { gatheringType: 3, zoneId: 3713, coords: { x: 20.6, y: 24.9 } }, // 草叢 - 南風諾托斯的感嘆
+        // 6.0 基礎區域 G13/G14 - 迷津
+        { gatheringType: 0, zoneId: 3708, coords: { x: 18.5, y: 12.3 } }, // 礦脈 - 再賦肉身
+        { gatheringType: 1, zoneId: 3708, coords: { x: 21.5, y: 33.4 } }, // 石場 - 熔化的前哨基地
+        { gatheringType: 2, zoneId: 3708, coords: { x: 7.5, y: 21.6 } },  // 良材 - 未頌龍詩
+        { gatheringType: 3, zoneId: 3708, coords: { x: 14.2, y: 28.6 } }  // 草叢 - 半途終旅
     ],
 
     // Lv.80 - 漆黑秘境 (5.0) - 來源: consolegameswiki
     // 區域: 雷克蘭德、珂露西亞島、安穆·艾蘭、伊爾美格、拉凱提卡大森林、黑風海
     80: [
         // 採掘師 - 礦脈 (gatheringType: 0)
-        { gatheringType: 0, zoneId: 2953, coords: { x: 35.4, y: 14.6 } }, // 雷克蘭德 - The Church of the First Light
-        { gatheringType: 0, zoneId: 2957, coords: { x: 25.7, y: 28.9 } }, // 拉凱提卡大森林 - The Wild Fete
+        { gatheringType: 0, zoneId: 2953, coords: { x: 35.4, y: 14.6 } }, // 雷克蘭德 - 光耀教會
+        { gatheringType: 0, zoneId: 2957, coords: { x: 25.7, y: 28.9 } }, // 拉凱提卡大森林 - 野園
         // 採掘師 - 石場 (gatheringType: 1)
-        { gatheringType: 1, zoneId: 2954, coords: { x: 22.3, y: 18.2 } }, // 珂露西亞島 - Amity
-        { gatheringType: 1, zoneId: 2955, coords: { x: 16.6, y: 11.6 } }, // 安穆·艾蘭 - Mord Souq
+        { gatheringType: 1, zoneId: 2954, coords: { x: 22.3, y: 18.2 } }, // 珂露西亞島 - 友好村
+        { gatheringType: 1, zoneId: 2955, coords: { x: 16.6, y: 11.6 } }, // 安穆·艾蘭 - 鼴靈市集
         // 園藝師 - 良材 (gatheringType: 2)
-        { gatheringType: 2, zoneId: 2953, coords: { x: 12.3, y: 10.5 } }, // 雷克蘭德 - Hare Among Giants
+        { gatheringType: 2, zoneId: 2953, coords: { x: 12.3, y: 10.5 } }, // 雷克蘭德 - 巨人的兔窩
         { gatheringType: 2, zoneId: 2955, coords: { x: 16.1, y: 30.0 } }, // 安穆·艾蘭 - The Ladle
         // 園藝師 - 草叢 (gatheringType: 3)
-        { gatheringType: 3, zoneId: 2953, coords: { x: 25.2, y: 29.9 } }, // 雷克蘭德 - Weed
+        { gatheringType: 3, zoneId: 2953, coords: { x: 25.2, y: 29.9 } }, // 雷克蘭德 - 雜草島
         { gatheringType: 3, zoneId: 2954, coords: { x: 13.7, y: 14.4 } }, // 珂露西亞島 - The Scree
-        { gatheringType: 3, zoneId: 2957, coords: { x: 26.7, y: 31.1 } }  // 拉凱提卡大森林 - The Wild Fete
+        { gatheringType: 3, zoneId: 2957, coords: { x: 26.7, y: 31.1 } }  // 拉凱提卡大森林 - 野園
     ],
 
     // Lv.70 - 紅蓮解放者 (4.0) - 來源: consolegameswiki
     // 區域: 基拉巴尼亞邊區、基拉巴尼亞山區、基拉巴尼亞湖區、紅玉海、延夏、太陽神草原
     70: [
         // 採掘師 - 礦脈 (gatheringType: 0)
-        { gatheringType: 0, zoneId: 2407, coords: { x: 37.6, y: 19.8 } }, // 基拉巴尼亞山區 - Unseen Spirits Laughing
-        { gatheringType: 0, zoneId: 2408, coords: { x: 11.4, y: 16.6 } }, // 基拉巴尼亞湖區 - The High Bank
+        { gatheringType: 0, zoneId: 2407, coords: { x: 37.6, y: 19.8 } }, // 基拉巴尼亞山區 - 祖靈笑
+        { gatheringType: 0, zoneId: 2408, coords: { x: 11.4, y: 16.6 } }, // 基拉巴尼亞湖區 - 高岸
         // 採掘師 - 石場 (gatheringType: 1)
-        { gatheringType: 1, zoneId: 2411, coords: { x: 29.3, y: 15.3 } }, // 太陽神草原 - Onsal Hakair
+        { gatheringType: 1, zoneId: 2411, coords: { x: 29.3, y: 15.3 } }, // 太陽神草原 - 昂薩哈凱爾
         // 園藝師 - 良材 (gatheringType: 2)
-        { gatheringType: 2, zoneId: 2406, coords: { x: 9, y: 29.9 } },    // 基拉巴尼亞邊區 - Dimwold
-        { gatheringType: 2, zoneId: 2408, coords: { x: 28.3, y: 9.8 } },  // 基拉巴尼亞湖區 - Abalathia's Skull
+        { gatheringType: 2, zoneId: 2406, coords: { x: 9, y: 29.9 } },    // 基拉巴尼亞邊區 - 昏暗林
+        { gatheringType: 2, zoneId: 2408, coords: { x: 28.3, y: 9.8 } },  // 基拉巴尼亞湖區 - 阿巴拉提亞龍頭
         // 園藝師 - 草叢 (gatheringType: 3)
-        { gatheringType: 3, zoneId: 2407, coords: { x: 26.5, y: 31.2 } }, // 基拉巴尼亞山區 - Mount Yorn
-        { gatheringType: 3, zoneId: 2409, coords: { x: 12.8, y: 14.3 } }, // 紅玉海 - Rasen Kaikyo
-        { gatheringType: 3, zoneId: 2410, coords: { x: 22.3, y: 12 } },   // 延夏 - Doma
-        { gatheringType: 3, zoneId: 2411, coords: { x: 15.8, y: 28 } }    // 太陽神草原 - Nhaama's Retreat
+        { gatheringType: 3, zoneId: 2407, coords: { x: 26.5, y: 31.2 } }, // 基拉巴尼亞山區 - 約恩山
+        { gatheringType: 3, zoneId: 2409, coords: { x: 12.8, y: 14.3 } }, // 紅玉海 - 螺旋海峽
+        { gatheringType: 3, zoneId: 2410, coords: { x: 22.3, y: 12 } },   // 延夏 - 多瑪
+        { gatheringType: 3, zoneId: 2411, coords: { x: 15.8, y: 28 } }    // 太陽神草原 - 月神沙漠北端
     ],
 
     // Lv.60 - 蒼穹浪漫 (3.0) - 來源: consolegameswiki
     // 區域: 庫爾札斯西部高地、德拉瓦尼亞山麓地、德拉瓦尼亞河谷地、德拉瓦尼亞雲海、阿巴拉提亞雲海
     60: [
         // 採掘師 - 礦脈 (gatheringType: 0)
-        { gatheringType: 0, zoneId: 2000, coords: { x: 18.7, y: 28.7 } },  // 德拉瓦尼亞山麓地 - Avalonia Fallen
-        { gatheringType: 0, zoneId: 2001, coords: { x: 25.3, y: 25 } },    // 德拉瓦尼亞河谷地 - The Makers' Quarter
-        { gatheringType: 0, zoneId: 2200, coords: { x: 22.5, y: 28.2 } },  // 庫爾札斯西部高地 - Red Rim
+        { gatheringType: 0, zoneId: 2000, coords: { x: 18.7, y: 28.7 } },  // 德拉瓦尼亞山麓地 - 阿瓦隆尼亞古陸
+        { gatheringType: 0, zoneId: 2001, coords: { x: 25.3, y: 25 } },    // 德拉瓦尼亞河谷地 - 薩雷安精品工匠街
+        { gatheringType: 0, zoneId: 2200, coords: { x: 22.5, y: 28.2 } },  // 庫爾札斯西部高地 - 紅沿
         // 採掘師 - 石場 (gatheringType: 1)
-        { gatheringType: 1, zoneId: 2002, coords: { x: 27.6, y: 19.2 } },  // 德拉瓦尼亞雲海 - Landlord Colony
-        { gatheringType: 1, zoneId: 2100, coords: { x: 34.8, y: 30.5 } },  // 阿巴拉提亞雲海 - Voor Sian Siran
+        { gatheringType: 1, zoneId: 2002, coords: { x: 27.6, y: 19.2 } },  // 德拉瓦尼亞雲海 - 人王遺跡
+        { gatheringType: 1, zoneId: 2100, coords: { x: 34.8, y: 30.5 } },  // 阿巴拉提亞雲海 - 沃仙曦染
         // 園藝師 - 良材 (gatheringType: 2)
-        { gatheringType: 2, zoneId: 2000, coords: { x: 10.3, y: 33.1 } },  // 德拉瓦尼亞山麓地 - Avalonia Fallen
-        { gatheringType: 2, zoneId: 2002, coords: { x: 32.5, y: 31.8 } },  // 德拉瓦尼亞雲海 - Eil Tohm
-        { gatheringType: 2, zoneId: 2002, coords: { x: 20.5, y: 29.7 } },  // 德拉瓦尼亞雲海 - Four Arms
-        { gatheringType: 2, zoneId: 2100, coords: { x: 22.6, y: 11.7 } },  // 阿巴拉提亞雲海 - The Blue Window
+        { gatheringType: 2, zoneId: 2000, coords: { x: 10.3, y: 33.1 } },  // 德拉瓦尼亞山麓地 - 阿瓦隆尼亞古陸
+        { gatheringType: 2, zoneId: 2002, coords: { x: 32.5, y: 31.8 } },  // 德拉瓦尼亞雲海 - 招惡荒島
+        { gatheringType: 2, zoneId: 2002, coords: { x: 20.5, y: 29.7 } },  // 德拉瓦尼亞雲海 - 四臂廣場
+        { gatheringType: 2, zoneId: 2100, coords: { x: 22.6, y: 11.7 } },  // 阿巴拉提亞雲海 - 藍天窗
         // 園藝師 - 草叢 (gatheringType: 3)
-        { gatheringType: 3, zoneId: 2001, coords: { x: 12.9, y: 18.6 } },  // 德拉瓦尼亞河谷地 - The Answering Quarter
-        { gatheringType: 3, zoneId: 2200, coords: { x: 11.5, y: 15.2 } }   // 庫爾札斯西部高地 - Twinpools
+        { gatheringType: 3, zoneId: 2001, coords: { x: 12.9, y: 18.6 } },  // 德拉瓦尼亞河谷地 - 薩雷安治學區
+        { gatheringType: 3, zoneId: 2200, coords: { x: 11.5, y: 15.2 } }   // 庫爾札斯西部高地 - 雙子池
     ]
 };
 

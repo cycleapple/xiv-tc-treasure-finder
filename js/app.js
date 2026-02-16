@@ -72,7 +72,7 @@ function renderGradeButtons() {
                 <span class="gathering-info">
                     <span class="gathering-level">Lv.${grade.gatheringLevel}</span>
                 </span>
-                <button class="btn-gathering-nodes" data-gathering-level="${grade.gatheringLevel}" onclick="event.stopPropagation(); showGatheringNodes(${grade.gatheringLevel}, '${grade.grade}', '${escapeHtml(grade.name)}')">
+                <button class="btn-gathering-nodes" data-gathering-level="${grade.gatheringLevel}" onclick="event.stopPropagation(); showGatheringNodes(${grade.gatheringLevel}, '${grade.grade}', '${escapeHtml(grade.name)}', ${JSON.stringify(grade.gatheringZoneIds || [])})">
                     採集點
                 </button>
             ` : ''}
@@ -1753,12 +1753,17 @@ function escapeHtml(text) {
 // 採集點功能
 // ============================================
 
-// 顯示採集點 Modal - 按等級查詢
-function showGatheringNodes(gatheringLevel, gradeName, mapName) {
-    const nodes = GATHERING_NODES_BY_LEVEL[gatheringLevel];
+// 顯示採集點 Modal - 按等級查詢，可按區域過濾
+function showGatheringNodes(gatheringLevel, gradeName, mapName, zoneIds) {
+    let nodes = GATHERING_NODES_BY_LEVEL[gatheringLevel];
     if (!nodes || nodes.length === 0) {
         alert('暫無採集點資料');
         return;
+    }
+
+    // 如果有指定區域，只顯示該區域的採集點
+    if (zoneIds && zoneIds.length > 0) {
+        nodes = nodes.filter(n => zoneIds.includes(n.zoneId));
     }
 
     // 更新標題
