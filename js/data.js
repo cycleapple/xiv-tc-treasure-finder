@@ -393,7 +393,7 @@ const ZONE_AETHERYTES = {
     // 紅玉海
     2409: [
         { name: "碧玉水", coords: { x: 28.7, y: 16.2 } },
-        { name: "痙攣寨", coords: { x: 23.2, y: 9.8 } }
+        { name: "自凝島", coords: { x: 23.2, y: 9.8 } }
     ],
     // 延夏
     2410: [
