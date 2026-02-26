@@ -771,6 +771,12 @@ function bindPartyEvents() {
         btnClearCompleted.addEventListener('click', clearCompletedTreasures);
     }
 
+    // 複製玩家順位
+    const btnCopyOrder = document.getElementById('btn-copy-order');
+    if (btnCopyOrder) {
+        btnCopyOrder.addEventListener('click', copyPlayerOrder);
+    }
+
     // 自動優化路線
     const btnAutoOptimize = document.getElementById('btn-auto-optimize');
     if (btnAutoOptimize) {
@@ -1319,6 +1325,32 @@ function updateRouteListUI() {
             input.focus();
             input.setSelectionRange(editingPlayerSelStart, editingPlayerSelEnd);
         }
+    }
+
+    // 更新玩家順位顯示
+    const playerOrderEl = document.getElementById('route-player-order');
+    if (playerOrderEl) {
+        const orderParts = sortedTreasures.map((t, i) => {
+            const name = t.player || t.addedByNickname || '未知';
+            return `<span class="order-item"><span class="order-number">${i + 1}</span>${escapeHtml(name)}</span>`;
+        });
+        playerOrderEl.innerHTML = orderParts.join('<span class="order-arrow">⭢</span>');
+    }
+}
+
+// 複製玩家順位
+function copyPlayerOrder() {
+    const sortedTreasures = [...partyTreasures].sort((a, b) => (a.order || 0) - (b.order || 0));
+    if (sortedTreasures.length === 0) return;
+
+    const text = sortedTreasures.map((t, i) => {
+        const name = t.player || t.addedByNickname || '未知';
+        return `${i + 1}${name}`;
+    }).join(' ⭢ ');
+
+    const btn = document.getElementById('btn-copy-order');
+    if (btn) {
+        copyToClipboard(text, btn);
     }
 }
 
