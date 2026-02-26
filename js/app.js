@@ -26,6 +26,8 @@ let selectedRouteItem = null;
 let isAddingTreasureMode = false;
 let partyExpiryTimer = null;
 let isReconnecting = false;
+let previousTreasureKeys = new Set();
+let hasInitialTreasureSync = false;
 
 // DOM 元素
 const stepGrade = document.getElementById('step-grade');
@@ -657,6 +659,15 @@ function setupSyncCallbacks() {
     });
 
     SyncService.onTreasuresChange((treasures) => {
+        // 偵測新增的藏寶點
+        const currentKeys = new Set(treasures.map(t => t.firebaseKey));
+        if (hasInitialTreasureSync) {
+            const newTreasures = treasures.filter(t => !previousTreasureKeys.has(t.firebaseKey));
+            newTreasures.forEach(t => showNewTreasureNotification(t));
+        }
+        hasInitialTreasureSync = true;
+        previousTreasureKeys = currentKeys;
+
         partyTreasures = treasures;
         updatePartyTreasuresUI();
         updateTreasureCardsPartyStatus();
@@ -1700,6 +1711,73 @@ function updateTreasureCardsPartyStatus() {
             }
         }
     });
+}
+
+// 顯示新增藏寶點的醒目通知
+function showNewTreasureNotification(treasure) {
+    const mapName = getMapName(treasure.mapId);
+    const coords = `X: ${treasure.coords.x.toFixed(1)} Y: ${treasure.coords.y.toFixed(1)}`;
+    const adder = treasure.addedByNickname || '未知';
+
+    // 播放提示音
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc1.frequency.value = 880;
+        osc2.frequency.value = 1109;
+        gain.gain.value = 0.15;
+        osc1.start();
+        osc2.start();
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+        osc1.stop(audioCtx.currentTime + 0.4);
+        osc2.stop(audioCtx.currentTime + 0.4);
+    } catch (e) { /* 靜音降級 */ }
+
+    // 建立通知元素
+    const notification = document.createElement('div');
+    notification.className = 'treasure-notification';
+    notification.innerHTML = `
+        <div class="treasure-notification-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V5h2v6h6v2z"/>
+            </svg>
+        </div>
+        <div class="treasure-notification-content">
+            <div class="treasure-notification-title">新藏寶點已新增！</div>
+            <div class="treasure-notification-details">
+                <span class="treasure-notification-map">${escapeHtml(mapName)}</span>
+                <span class="treasure-notification-coords">${coords}</span>
+            </div>
+            <div class="treasure-notification-adder">由 ${escapeHtml(adder)} 新增</div>
+        </div>
+        <button class="treasure-notification-close" onclick="this.parentElement.remove()">&times;</button>
+    `;
+
+    // 確保容器存在
+    let container = document.getElementById('treasure-notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'treasure-notification-container';
+        document.body.appendChild(container);
+    }
+
+    container.appendChild(notification);
+
+    // 觸發動畫
+    requestAnimationFrame(() => {
+        notification.classList.add('show');
+    });
+
+    // 5 秒後自動消失
+    setTimeout(() => {
+        notification.classList.add('hide');
+        notification.addEventListener('animationend', () => notification.remove());
+    }, 5000);
 }
 
 // 新增藏寶圖到隊伍
