@@ -18,6 +18,8 @@ const PartyService = (function() {
     let currentMemberId = null;
     let memberNickname = null;
     let currentPartyExpiresAt = null;
+    let isLeader = false;
+    let orderLocked = false;
 
     // ========== localStorage 管理 ==========
 
@@ -148,6 +150,7 @@ const PartyService = (function() {
         // 更新狀態
         currentPartyCode = partyCode;
         currentMemberId = userId;
+        isLeader = true;
 
         // 儲存到 localStorage (用於重連)
         savePartyState();
@@ -215,6 +218,7 @@ const PartyService = (function() {
         // 更新狀態
         currentPartyCode = partyCode;
         currentMemberId = userId;
+        isLeader = false;
 
         // 儲存到 localStorage (用於重連)
         savePartyState();
@@ -259,6 +263,8 @@ const PartyService = (function() {
         currentMemberId = null;
         memberNickname = null;
         currentPartyExpiresAt = null;
+        isLeader = false;
+        orderLocked = false;
 
         // 清除 localStorage
         clearPartyState();
@@ -526,6 +532,51 @@ const PartyService = (function() {
         return loadPartyState() !== null;
     }
 
+    // 切換順序鎖定狀態 (僅房主可操作)
+    async function toggleOrderLock() {
+        const sdk = window.FirebaseSDK;
+        if (!sdk) throw new Error('Firebase SDK 尚未載入');
+
+        if (!currentPartyCode) {
+            throw new Error('尚未加入隊伍');
+        }
+
+        if (!isLeader) {
+            throw new Error('只有房主可以鎖定/解鎖順序');
+        }
+
+        const newLocked = !orderLocked;
+        await sdk.set(getRef(`parties/${currentPartyCode}/meta/orderLocked`), newLocked);
+        orderLocked = newLocked;
+        console.log(`順序鎖定狀態: ${newLocked ? '已鎖定' : '已解鎖'}`);
+        return newLocked;
+    }
+
+    // 取得順序是否被鎖定
+    function isOrderLocked() {
+        return orderLocked;
+    }
+
+    // 設定順序鎖定狀態 (供同步服務使用)
+    function setOrderLocked(locked) {
+        orderLocked = !!locked;
+    }
+
+    // 檢查當前使用者是否為房主
+    function getIsLeader() {
+        return isLeader;
+    }
+
+    // 設定房主狀態 (供成員同步回調使用)
+    function setIsLeader(value) {
+        isLeader = !!value;
+    }
+
+    // 檢查當前使用者是否可以修改順序
+    function canModifyOrder() {
+        return isLeader || !orderLocked;
+    }
+
     // 自動優化路線順序
     async function autoOptimizeRoute(options = {}) {
         const sdk = window.FirebaseSDK;
@@ -586,6 +637,12 @@ const PartyService = (function() {
         updateTreasureOrder,
         swapTreasureOrder,
         autoOptimizeRoute,
+        toggleOrderLock,
+        isOrderLocked,
+        setOrderLocked,
+        getIsLeader,
+        setIsLeader,
+        canModifyOrder,
         clearCompletedTreasures,
         updateNickname,
         getCurrentPartyCode,

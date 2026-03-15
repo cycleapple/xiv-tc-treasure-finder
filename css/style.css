@@ -1454,6 +1454,27 @@ footer a:hover {
     color: var(--text-secondary);
 }
 
+/* 鎖定順序按鈕 */
+.btn-lock-order.order-locked {
+    background: var(--warning, #f0ad4e);
+    color: white;
+}
+
+.btn-lock-order.order-locked:hover {
+    background: var(--warning, #f0ad4e);
+    opacity: 0.85;
+}
+
+.route-order-btns button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.route-order-btns button:disabled:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
 .btn-text {
     background: var(--bg-tertiary);
     border: none;

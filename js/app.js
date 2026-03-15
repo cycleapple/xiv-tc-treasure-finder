@@ -655,7 +655,13 @@ function disablePartyButtons() {
 function setupSyncCallbacks() {
     SyncService.onMembersChange((members) => {
         partyMembers = members;
+        // 更新房主狀態
+        const userId = AuthService.getUserId();
+        if (userId && members[userId]) {
+            PartyService.setIsLeader(!!members[userId].isLeader);
+        }
         updateMembersUI();
+        updateOrderLockUI();
     });
 
     SyncService.onTreasuresChange((treasures) => {
@@ -686,6 +692,10 @@ function setupSyncCallbacks() {
             PartyService.setExpiresAt(meta.expiresAt);
             startExpiryTimer();
         }
+        // 同步順序鎖定狀態
+        PartyService.setOrderLocked(!!meta?.orderLocked);
+        updateOrderLockUI();
+        updateRouteListUI();
     });
 }
 
@@ -781,6 +791,12 @@ function bindPartyEvents() {
     const btnAutoOptimize = document.getElementById('btn-auto-optimize');
     if (btnAutoOptimize) {
         btnAutoOptimize.addEventListener('click', autoOptimizeRoute);
+    }
+
+    // 鎖定順序
+    const btnLockOrder = document.getElementById('btn-lock-order');
+    if (btnLockOrder) {
+        btnLockOrder.addEventListener('click', handleToggleOrderLock);
     }
 
     // 地圖選擇
@@ -1241,6 +1257,8 @@ function updateRouteListUI() {
     const editingPlayerSelStart = activePlayerEl ? activePlayerEl.selectionStart : null;
     const editingPlayerSelEnd = activePlayerEl ? activePlayerEl.selectionEnd : null;
 
+    const canModify = PartyService.canModifyOrder();
+
     routeItems.innerHTML = sortedTreasures.map((treasure, index) => {
         const mapName = getMapName(treasure.mapId);
         const firebaseKey = treasure.firebaseKey;
@@ -1284,8 +1302,8 @@ function updateRouteListUI() {
                 </div>
                 <div class="route-item-actions">
                     <div class="route-order-btns">
-                        <button onclick="event.stopPropagation(); moveRouteItem('${firebaseKey}', 'up')" title="上移">▲</button>
-                        <button onclick="event.stopPropagation(); moveRouteItem('${firebaseKey}', 'down')" title="下移">▼</button>
+                        <button onclick="event.stopPropagation(); moveRouteItem('${firebaseKey}', 'up')" title="${canModify ? '上移' : '順序已鎖定'}" ${canModify ? '' : 'disabled'}>▲</button>
+                        <button onclick="event.stopPropagation(); moveRouteItem('${firebaseKey}', 'down')" title="${canModify ? '下移' : '順序已鎖定'}" ${canModify ? '' : 'disabled'}>▼</button>
                     </div>
                     <button class="btn-complete" onclick="event.stopPropagation(); toggleRouteComplete('${firebaseKey}')" title="${isCompleted ? '標記未完成' : '標記完成'}">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -1532,6 +1550,8 @@ function calcZoomOffset(coords, mapId) {
 
 // 移動路線項目 (使用 firebaseKey)
 async function moveRouteItem(firebaseKey, direction) {
+    if (!PartyService.canModifyOrder()) return;
+
     const sortedTreasures = [...partyTreasures].sort((a, b) => (a.order || 0) - (b.order || 0));
     const currentIndex = sortedTreasures.findIndex(t => t.firebaseKey === firebaseKey);
 
@@ -1635,6 +1655,11 @@ async function clearCompletedTreasures() {
 
 // 自動優化路線
 async function autoOptimizeRoute() {
+    if (!PartyService.canModifyOrder()) {
+        alert('順序已被房主鎖定，無法優化路線');
+        return;
+    }
+
     if (partyTreasures.length <= 1) {
         alert('需要至少 2 個藏寶點才能優化路線');
         return;
@@ -1669,6 +1694,51 @@ async function autoOptimizeRoute() {
         console.error('路線優化錯誤:', error);
     } finally {
         if (btn) btn.disabled = false;
+    }
+}
+
+// 切換順序鎖定
+async function handleToggleOrderLock() {
+    try {
+        await PartyService.toggleOrderLock();
+    } catch (error) {
+        console.error('切換鎖定失敗:', error);
+    }
+}
+
+// 更新順序鎖定 UI
+function updateOrderLockUI() {
+    const btnLock = document.getElementById('btn-lock-order');
+    const lockIcon = document.getElementById('lock-order-icon');
+    if (!btnLock) return;
+
+    const isLeader = PartyService.getIsLeader();
+    const locked = PartyService.isOrderLocked();
+
+    // 只有房主可以看到鎖定按鈕
+    btnLock.classList.toggle('hidden', !isLeader);
+
+    // 更新按鈕外觀
+    btnLock.classList.toggle('order-locked', locked);
+    btnLock.title = locked ? '解鎖順序' : '鎖定順序';
+
+    // 更新圖示 (鎖定/解鎖)
+    if (lockIcon) {
+        if (locked) {
+            // 鎖定圖示
+            lockIcon.innerHTML = '<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3-9H9V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2z"/>';
+        } else {
+            // 解鎖圖示
+            lockIcon.innerHTML = '<path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h2c0-1.66 1.34-3 3-3s3 1.34 3 3v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"/>';
+        }
+    }
+
+    // 非房主時，禁用受鎖定影響的按鈕
+    const btnAutoOptimize = document.getElementById('btn-auto-optimize');
+    if (btnAutoOptimize) {
+        const shouldDisable = locked && !isLeader;
+        btnAutoOptimize.disabled = shouldDisable;
+        btnAutoOptimize.title = shouldDisable ? '順序已被房主鎖定' : '自動優化路線';
     }
 }
 
