@@ -1364,7 +1364,7 @@ function copyPlayerOrder() {
     const text = sortedTreasures.map((t, i) => {
         const name = t.player || t.addedByNickname || '未知';
         return `${i + 1}${name}`;
-    }).join(' ⭢ ');
+    }).join(' → ');
 
     const btn = document.getElementById('btn-copy-order');
     if (btn) {
