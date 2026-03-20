@@ -5,8 +5,8 @@ const GRADE_DATA = [
     { grade: "G17", itemId: 43557, name: "陳舊的獰豹革地圖", partySize: 8, expansion: "7.0", gatheringLevel: 100, gatheringZoneIds: [4508, 4509, 4507] },
     { grade: "G16", itemId: 43556, name: "陳舊的銀狼革地圖", partySize: 1, expansion: "7.0", gatheringLevel: 100, gatheringZoneIds: [4508, 4509, 4507] },
     { grade: "G15", itemId: 39591, name: "陳舊的蛇牛革地圖", partySize: 8, expansion: "6.3", gatheringLevel: 90, gatheringZoneIds: [3713] },
-    { grade: "G14", itemId: 36612, name: "陳舊的金毗羅鱷革地圖", partySize: 8, expansion: "6.0", gatheringLevel: 90, gatheringZoneIds: [3708] },
-    { grade: "G13", itemId: 36611, name: "陳舊的賽加羚羊革地圖", partySize: 1, expansion: "6.0", gatheringLevel: 90, gatheringZoneIds: [3708] },
+    { grade: "G14", itemId: 36612, name: "陳舊的金毗羅鱷革地圖", partySize: 8, expansion: "6.0", gatheringLevel: 90, gatheringZoneIds: [3712] },
+    { grade: "G13", itemId: 36611, name: "陳舊的賽加羚羊革地圖", partySize: 1, expansion: "6.0", gatheringLevel: 90, gatheringZoneIds: [3712] },
     { grade: "G12", itemId: 26745, name: "陳舊的纏尾蛟革地圖", partySize: 8, expansion: "5.0", gatheringLevel: 80, gatheringZoneIds: [2953, 2954, 2955, 2957] },
     { grade: "G11", itemId: 26744, name: "陳舊的綠飄龍革地圖", partySize: 1, expansion: "5.0", gatheringLevel: 80, gatheringZoneIds: [2953, 2954, 2955, 2957] },
     { grade: "綠圖", itemId: 19770, name: "深層傳送魔紋的地圖", partySize: 8, expansion: "4.05", special: true, gatheringLevel: 70, gatheringZoneIds: [2406, 2407, 2408, 2409, 2410, 2411] },
@@ -215,11 +215,11 @@ const GATHERING_NODES_BY_LEVEL = {
         // 厄爾庇斯 G15 (6.3)
         { gatheringType: 1, zoneId: 3713, coords: { x: 12.0, y: 18.4 } }, // 石場 - 逍遙水徑
         { gatheringType: 3, zoneId: 3713, coords: { x: 20.6, y: 24.9 } }, // 草叢 - 南風諾托斯的感嘆
-        // 6.0 基礎區域 G13/G14 - 迷津
-        { gatheringType: 0, zoneId: 3708, coords: { x: 18.5, y: 12.3 } }, // 礦脈 - 再賦肉身
-        { gatheringType: 1, zoneId: 3708, coords: { x: 21.5, y: 33.4 } }, // 石場 - 熔化的前哨基地
-        { gatheringType: 2, zoneId: 3708, coords: { x: 7.5, y: 21.6 } },  // 良材 - 未頌龍詩
-        { gatheringType: 3, zoneId: 3708, coords: { x: 14.2, y: 28.6 } }  // 草叢 - 半途終旅
+        // 6.0 基礎區域 G13/G14 - 天外天垓
+        { gatheringType: 0, zoneId: 3712, coords: { x: 18.5, y: 12.3 } }, // 礦脈 - 再賦肉身
+        { gatheringType: 1, zoneId: 3712, coords: { x: 21.5, y: 33.4 } }, // 石場 - 熔化的前哨基地
+        { gatheringType: 2, zoneId: 3712, coords: { x: 7.5, y: 21.6 } },  // 良材 - 未頌龍詩
+        { gatheringType: 3, zoneId: 3712, coords: { x: 14.2, y: 28.6 } }  // 草叢 - 半途終旅
     ],
 
     // Lv.80 - 漆黑秘境 (5.0) - 來源: consolegameswiki
