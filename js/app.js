@@ -1593,7 +1593,7 @@ async function updateTreasurePlayer(inputElement) {
     }
 }
 
-// 複製玩家訊息 (格式: /p 玩家名 [地圖]:(X, Y) | 最近傳送水晶:[水晶名])
+// 複製玩家訊息 (格式相容 DailyRoutines AutoConvertMapLink: <地圖> ( X  , Y ))
 function copyPlayerMessage(btn, firebaseKey) {
     const treasure = partyTreasures.find(t => t.firebaseKey === firebaseKey);
     if (!treasure) return;
@@ -1605,7 +1605,7 @@ function copyPlayerMessage(btn, firebaseKey) {
     const zoneId = MAP_DATA[treasure.mapId]?.placename_id;
     const nearestAetheryte = zoneId ? findNearestAetheryte(zoneId, treasure.coords) : null;
 
-    let text = `/p ${playerName} [${mapName}]:(${x}, ${y})`;
+    let text = `/p ${playerName} ${mapName} ( ${x}  , ${y} )`;
     if (nearestAetheryte) {
         text += ` | 最近傳送水晶:[${nearestAetheryte.name}]`;
     }
