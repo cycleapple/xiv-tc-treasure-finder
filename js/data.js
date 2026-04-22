@@ -283,6 +283,11 @@ const GATHERING_NODES_BY_LEVEL = {
 // zoneId = PlaceName ID (對應 PLACE_NAMES)
 const ZONE_AETHERYTES = {
     // === 7.0 黃金遺產 ===
+    // 奧闊帕恰山
+    4505: [
+        { name: "瓦丘恩佩洛", coords: { x: 28.1, y: 13.1 } },
+        { name: "沃拉的迴響", coords: { x: 30.8, y: 34.2 } }
+    ],
     // 克扎瑪烏卡濕地
     4506: [
         { name: "哈努聚落", coords: { x: 18.1, y: 11.9 } },
