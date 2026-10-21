@@ -14,7 +14,12 @@ const GRADE_DATA = [
     { grade: "G9", itemId: 17835, name: "陳舊的迦迦納怪鳥革地圖", partySize: 1, expansion: "4.0", gatheringLevel: 70, gatheringZoneIds: [2406, 2407, 2408, 2409, 2410, 2411] },
     { grade: "G8", itemId: 12243, name: "陳舊的巨龍革地圖", partySize: 8, expansion: "3.0", gatheringLevel: 60, gatheringZoneIds: [2200, 2000, 2001, 2002, 2100] },
     { grade: "G7", itemId: 12242, name: "陳舊的飛龍革地圖", partySize: 1, expansion: "3.0", gatheringLevel: 60, gatheringZoneIds: [2200, 2000, 2001, 2002, 2100] },
-    { grade: "G6", itemId: 12241, name: "陳舊的古鳥革地圖", partySize: 1, expansion: "3.0", gatheringLevel: 60, gatheringZoneIds: [2200, 2000, 2001, 2002, 2100] }
+    { grade: "G6", itemId: 12241, name: "陳舊的古鳥革地圖", partySize: 1, expansion: "3.0", gatheringLevel: 60, gatheringZoneIds: [2200, 2000, 2001, 2002, 2100] },
+    { grade: "G5", itemId: 6692, name: "陳舊的毒蜥蜴革地圖", partySize: 8, expansion: "2.1", gatheringLevel: 50, gatheringZoneIds: [30, 31, 32, 33, 42, 43, 45, 46, 55] },
+    { grade: "G4", itemId: 6691, name: "陳舊的野豬革地圖", partySize: 1, expansion: "2.1", gatheringLevel: 50, gatheringZoneIds: [30, 31, 32, 33, 42, 43, 45, 46, 55] },
+    { grade: "G3", itemId: 6690, name: "陳舊的巨蟾蜍革地圖", partySize: 1, expansion: "2.1", gatheringLevel: 50, gatheringZoneIds: [30, 31, 32, 33, 42, 43, 45, 46, 55] },
+    { grade: "G2", itemId: 6689, name: "陳舊的山羊革地圖", partySize: 1, expansion: "2.1", gatheringLevel: 45, gatheringZoneIds: [34, 44, 63] },
+    { grade: "G1", itemId: 6688, name: "陳舊的鞣革地圖", partySize: 1, expansion: "2.1", gatheringLevel: 40, gatheringZoneIds: [32, 46, 56, 63] }
 ];
 
 // 藏寶圖物品名稱 (繁中)
@@ -188,6 +193,36 @@ const GATHERING_TYPE_INFO = {
 // 採集點資料 - 按採集等級分類
 // 藏寶圖按採集等級掉落，同等級的藏寶圖共享相同的採集點
 const GATHERING_NODES_BY_LEVEL = {
+    // 2.x 一般採集點（採掘師／園藝師；不含限時點與釣場）。
+    // 座標來源：https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/blob/staging/libs/data/src/lib/json/nodes.json
+    // zoneId 使用 maps.json 的 placename_id，避免誤用採集點的子區域 ID。
+    50: [
+        { gatheringType: 2, zoneId: 55, coords: { x: 16.46, y: 23.31 } },
+        { gatheringType: 3, zoneId: 45, coords: { x: 13.87, y: 31.73 } },
+        { gatheringType: 1, zoneId: 31, coords: { x: 21.74, y: 35.03 } },
+        { gatheringType: 1, zoneId: 42, coords: { x: 18.34, y: 28.76 } },
+        { gatheringType: 0, zoneId: 46, coords: { x: 23.35, y: 24.35 } },
+        { gatheringType: 2, zoneId: 30, coords: { x: 20.1, y: 21.36 } },
+        { gatheringType: 2, zoneId: 32, coords: { x: 17.22, y: 32.28 } },
+        { gatheringType: 2, zoneId: 43, coords: { x: 29.31, y: 19.7 } },
+        { gatheringType: 1, zoneId: 55, coords: { x: 18.18, y: 24.63 } },
+        { gatheringType: 1, zoneId: 33, coords: { x: 35.55, y: 29.54 } }
+    ],
+    45: [
+        { gatheringType: 1, zoneId: 34, coords: { x: 28.45, y: 22.17 } },
+        { gatheringType: 2, zoneId: 63, coords: { x: 22.87, y: 17.83 } },
+        { gatheringType: 3, zoneId: 34, coords: { x: 34.62, y: 24.74 } },
+        { gatheringType: 0, zoneId: 44, coords: { x: 12.65, y: 19.1 } },
+        { gatheringType: 0, zoneId: 34, coords: { x: 30.28, y: 25.31 } }
+    ],
+    40: [
+        { gatheringType: 1, zoneId: 46, coords: { x: 21.7, y: 28.07 } },
+        { gatheringType: 0, zoneId: 56, coords: { x: 28.66, y: 22.88 } },
+        { gatheringType: 2, zoneId: 32, coords: { x: 19.27, y: 25.54 } },
+        { gatheringType: 3, zoneId: 56, coords: { x: 21.47, y: 28.65 } },
+        { gatheringType: 3, zoneId: 32, coords: { x: 21.07, y: 29.09 } },
+        { gatheringType: 0, zoneId: 63, coords: { x: 24.27, y: 19.92 } }
+    ],
     // Lv.100 - 黃金遺產 (7.0) - 來源: consolegameswiki
     // 區域: 夏勞尼荒野、遺產之地、亞克特爾樹海
     100: [
@@ -282,6 +317,83 @@ const GATHERING_NODES_BY_LEVEL = {
 // 傳送點座標資料 (從 datamining 提取)
 // zoneId = PlaceName ID (對應 PLACE_NAMES)
 const ZONE_AETHERYTES = {
+    // === 2.0 新生艾奧傑亞 ===
+    // 座標來源：https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/blob/staging/libs/data/src/lib/json/aetherytes.json
+    // 繁中名稱沿用 data/PlaceName.csv。
+    // 中拉諾西亞
+    30: [
+        { name: "盛夏農莊", coords: { x: 25.98, y: 16.27 } }
+    ],
+    // 拉諾西亞低地
+    31: [
+        { name: "莫拉比造船廠", coords: { x: 24.64, y: 35.13 } }
+    ],
+    // 東拉諾西亞
+    32: [
+        { name: "太陽海岸", coords: { x: 31.34, y: 31 } },
+        { name: "葡萄酒港", coords: { x: 21.01, y: 21.57 } }
+    ],
+    // 西拉諾西亞
+    33: [
+        { name: "雨燕塔殖民地", coords: { x: 34.54, y: 31.65 } },
+        { name: "小麥酒港", coords: { x: 26.85, y: 25.87 } }
+    ],
+    // 拉諾西亞高地
+    34: [
+        { name: "石綠湖營地", coords: { x: 30.25, y: 23.18 } }
+    ],
+    // 西薩納蘭
+    42: [
+        { name: "地平關", coords: { x: 22.96, y: 16.85 } }
+    ],
+    // 中薩納蘭
+    43: [
+        { name: "黑塵驛站", coords: { x: 21.17, y: 18.23 } }
+    ],
+    // 東薩納蘭
+    44: [
+        { name: "枯骨營地", coords: { x: 13.89, y: 24.35 } }
+    ],
+    // 南薩納蘭
+    45: [
+        { name: "小阿拉米格", coords: { x: 18.43, y: 13.11 } },
+        { name: "遺忘綠洲", coords: { x: 15.08, y: 29.64 } }
+    ],
+    // 北薩納蘭
+    46: [
+        { name: "藍霧營地", coords: { x: 22.07, y: 30.59 } },
+        { name: "青磷精煉所", coords: { x: 21.08, y: 20.88 } }
+    ],
+    // 黑衣森林中央林區
+    54: [
+        { name: "彎枝牧場", coords: { x: 21.89, y: 22.32 } }
+    ],
+    // 黑衣森林東部林區
+    55: [
+        { name: "霍桑山寨", coords: { x: 17.57, y: 27.34 } }
+    ],
+    // 黑衣森林南部林區
+    56: [
+        { name: "石場水車", coords: { x: 25.22, y: 20.03 } },
+        { name: "恬靜路營地", coords: { x: 16.94, y: 28.49 } }
+    ],
+    // 黑衣森林北部林區
+    57: [
+        { name: "秋瓜浮村", coords: { x: 20.86, y: 26.27 } }
+    ],
+    // 庫爾札斯中央高地
+    63: [
+        { name: "巨龍首營地", coords: { x: 26.07, y: 16.72 } }
+    ],
+    // 摩杜納
+    67: [
+        { name: "喪靈鐘", coords: { x: 22.45, y: 8.12 } }
+    ],
+    // 拉諾西亞外地
+    350: [
+        { name: "瞭望陣營地", coords: { x: 19.14, y: 17.1 } }
+    ],
+
     // === 7.0 黃金遺產 ===
     // 奧闊帕恰山
     4505: [
