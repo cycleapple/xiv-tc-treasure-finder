@@ -1,7 +1,6 @@
 // 藏寶圖等級數據 (由高到低排序)
-// 注意：繁中版目前只到 7.0，7.0 以後的內容暫時隱藏
 const GRADE_DATA = [
-    // { grade: "G18", itemId: 46185, name: "陳舊的卡岡圖亞革地圖", partySize: 8, expansion: "7.3" }, // 7.3 尚未有繁中翻譯
+    { grade: "G18", itemId: 46185, name: "陳舊的卡岡圖亞革地圖", partySize: 8, expansion: "7.3", gatheringLevel: 100, gatheringZoneIds: [4510] },
     { grade: "G17", itemId: 43557, name: "陳舊的獰豹革地圖", partySize: 8, expansion: "7.0", gatheringLevel: 100, gatheringZoneIds: [4508, 4509, 4507] },
     { grade: "G16", itemId: 43556, name: "陳舊的銀狼革地圖", partySize: 1, expansion: "7.0", gatheringLevel: 100, gatheringZoneIds: [4508, 4509, 4507] },
     { grade: "G15", itemId: 39591, name: "陳舊的蛇牛革地圖", partySize: 8, expansion: "6.3", gatheringLevel: 90, gatheringZoneIds: [3713] },
@@ -223,9 +222,13 @@ const GATHERING_NODES_BY_LEVEL = {
         { gatheringType: 3, zoneId: 32, coords: { x: 21.07, y: 29.09 } },
         { gatheringType: 0, zoneId: 63, coords: { x: 24.27, y: 19.92 } }
     ],
-    // Lv.100 - 黃金遺產 (7.0) - 來源: consolegameswiki
-    // 區域: 夏勞尼荒野、遺產之地、亞克特爾樹海
+    // Lv.100 - 黃金遺產 (7.0/7.3) - 來源: consolegameswiki
+    // 區域: 夏勞尼荒野、遺產之地、亞克特爾樹海、憶想之地
     100: [
+        // 憶想之地 G18 (7.3)
+        // https://ffxiv.consolegameswiki.com/wiki/Timeworn_Gargantuaskin_Map
+        { gatheringType: 1, zoneId: 4510, coords: { x: 35, y: 18 } },
+        { gatheringType: 3, zoneId: 4510, coords: { x: 17, y: 18 } },
         // 採掘師 - 礦脈 (gatheringType: 0)
         { gatheringType: 0, zoneId: 4508, coords: { x: 13, y: 9 } },       // 夏勞尼荒野 - 艾休凱亞尼荒原
         { gatheringType: 0, zoneId: 4509, coords: { x: 29, y: 22 } },      // 遺產之地 - 亞斯拉尼荒野東部
